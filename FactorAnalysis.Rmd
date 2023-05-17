@@ -114,17 +114,91 @@ Combined_Overall_NoPN <- Combined_Overall_Sample[ ,c(1, 5:8, 11:15, 19:23)]
 
 Combined_NoPN_NoNum <- Combined_Overall_NoPN[,-1]
 
-Combined_Overall_NoPN$LoadedFactor <- apply(Combined_NoPN_NoNum, 1, 
-                                      function(i) paste(colnames(Combined_NoPN_NoNum)[ !is.na(i) ], 
-                                                        collapse = ", "))
-
+Combined_Overall_NoPN$LoadedFactor <- apply(Combined_NoPN_NoNum, 1, function(i) paste(colnames(Combined_NoPN_NoNum)[!is.na(i) ], collapse = ", "))
+                                        
 color.me <- which(Combined_Overall_NoPN$LoadedFactor == 'SMU_F8_Flo')
-
-knitr::kable(Combined_Overall_NoPN, booktabs = TRUE) %>%
-  row_spec(color.me, bold = T, color = "white", background = "green") %>%
-  scroll_box(width = "800px", height = "300px") 
- 
 ```
+
+```{r, results='hide'}
+function1 <- function(x) {
+  count.fields(textConnection(Combined_Overall_NoPN$LoadedFactor[x]), sep = ",", blank.lines.skip = FALSE)
+}
+
+table(function1(1:312))
+```
+
+```{r}
+FL_count <- as.list(function1(1:312)) # number of factor loadings per item 
+
+### ZERO FACTOR LOADINGS ###
+
+# red list, items that did not load on any factor =========================== RED 1 START
+
+zeroFL <- which(FL_count == 0)
+
+### ONE FACTOR LOADING ###
+
+# =========================================================================== RED 1 END
+
+oneFL <- which(FL_count == 1) # subsetting for items that loaded on one factor only
+
+oneFL_df <- Combined_Overall_NoPN[oneFL, ]
+
+oneFL_df$loadedFL <- apply(oneFL_df[,-1], 1, function(z) na.omit(z)[1])
+
+oneFL_df$loadedFL <- as.numeric(oneFL_df$loadedFL)
+
+# green list, items that loaded >.4 on one factor, no cross-loadings ======= GREEN 1 START
+
+oneFL_grp4 <- which(abs(oneFL_df$loadedFL)>= .40)
+
+oneFL_grp4 <- oneFL_df[oneFL_grp4, ]
+
+oneFL_grp4_items <- oneFL_grp4$Item_No 
+
+# ========================================================================== GREEN 1 END
+
+# yellow list, items that loaded on one factor only but with <.4 loading === YELLOW 1 START
+
+oneFL_lst4 <- which(abs(oneFL_df$loadedFL) < .40)
+
+oneFL_lst4 <- oneFL_df[oneFL_lst4, ]
+
+oneFL_lst4_items <- oneFL_lst4$Item_No
+
+# ========================================================================== YELLOW 1 END
+
+### TWO FACTOR LOADINGS 
+
+
+```
+
+```{r}
+knitr::kable(Combined_Overall_NoPN, booktabs = TRUE) %>%
+  row_spec(zeroFL, bold = T, color = "white", background = "lightsalmon") %>%
+  kable_styling(position="center") %>%
+  scroll_box(height = "300px") 
+```
+
+```{r}
+knitr::kable(Combined_Overall_NoPN, booktabs = TRUE) %>%
+  row_spec(oneFL_lst4_items, bold=T, color="darkgray", background = "yellow") %>%
+  kable_styling(position="center") %>%
+  scroll_box(height = "300px") 
+```
+
+```{r}
+knitr::kable(Combined_Overall_NoPN, booktabs = TRUE) %>%
+  row_spec(oneFL_grp4_items, bold = T, color = "white", background = "green") %>%
+  kable_styling(position="center") %>%
+  scroll_box(height = "300px") 
+```
+
+
+
+
+
+
 
 
 
