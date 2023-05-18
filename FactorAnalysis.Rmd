@@ -208,7 +208,7 @@ twoFL_GREEN_items_PN <- twoFL_GREEN_PN$Item_No
 
 # ========================================================================= GREEN 2 END 
 
-# items that loaded >=.40 in only one sample or lloaded <.40 in both ====== YELLOW 2 START
+# items that loaded >=.40 in only one sample or loaded <.40 in both ====== YELLOW 2 START
 
 twoFL_YELLOW_PN <- with(twoFL_notsplit_PN, which(category %in% "YELLOW"))
 
@@ -240,11 +240,60 @@ knitr::kable(tbl3)
 ```
 
 ```{r}
-threeFL_split_PN <- with(threeFL_df_PN, which(LoadedFactor %in% c("Com_F1_PosVal, Com_F3_NegVal, MTurk_F2_Negval", "Com_F1_PosVal, Com_F3_NegVal, SMU_F1_CogPosVal")))
+threeFL_notsplit_PN <- with(threeFL_df_PN, which(LoadedFactor %in% c("Com_F1_PosVal, Com_F2_BroadPos, SMU_F1_CogPosVal", "Com_F1_PosVal, MTurk_F1_PosVal, SMU_F1_CogPosVal", "Com_F1_PosVal, MTurk_F1_PosVal, SMU_F2_PhysPosVal", "Com_F2_BroadPos, MTurk_F1_PosVal, SMU_F1_CogPosVal", "Com_F2_BroadPos, MTurk_F1_PosVal, SMU_F2_PhysPosVal", "Com_F3_NegVal, MTurk_F2_Negval, SMU_F3_BroadNegVal")))
+
+threeFL_notsplit_PN <- threeFL_df_PN[threeFL_notsplit_PN, ]
+
+threeFL_notsplit_NoNum_PN <- threeFL_notsplit_PN[,-c(1, 10)] # removing non-numerical columns
+
+threeFL_notsplit_PN$firstloading <- apply(threeFL_notsplit_NoNum_PN, 1, function(z) na.omit(z)[1]) # extract first loading 
+
+threeFL_notsplit_PN$secondloading <- apply(threeFL_notsplit_NoNum_PN, 1, function(z) na.omit(z)[2]) # extract second loading 
+
+threeFL_notsplit_PN$thirdloading <- apply(threeFL_notsplit_NoNum_PN, 1, function(z) na.omit(z)[3]) # extract third loading 
+
+threeFL_notsplit_PN$firstgrp4 <- ifelse(threeFL_notsplit_PN$firstloading >= .40, TRUE, FALSE)
+
+threeFL_notsplit_PN$secondgrp4 <- ifelse(threeFL_notsplit_PN$secondloading >= .40, TRUE, FALSE)
+
+threeFL_notsplit_PN$thirdgrp4 <- ifelse(threeFL_notsplit_PN$thirdloading >= .40, TRUE, FALSE)
+
+threeFL_notsplit_PN$category <- ifelse(threeFL_notsplit_PN$firstgrp4 == TRUE & threeFL_notsplit_PN$secondgrp4 == TRUE & threeFL_notsplit_PN$thirdgrp4 == TRUE, "GREEN", "YELLOW")
+
+# items that loaded >=.40 across samples (all pos or all neg) ============= GREEN 3 START
+
+threeFL_GREEN_PN <- with(threeFL_notsplit_PN, which(category %in% "GREEN"))
+
+threeFL_GREEN_PN <- threeFL_notsplit_PN[threeFL_GREEN_PN, ]
+
+threeFL_GREEN_items_PN <- threeFL_GREEN_PN$Item_No 
+
+# ========================================================================= GREEN 3 END 
+
+# items that were all pos or neg but did not load >=.40 in all samples ==== YELLOW 3 START
+
+threeFL_YELLOW_PN <- with(threeFL_notsplit_PN, which(category %in% "YELLOW"))
+
+threeFL_YELLOW_PN <- threeFL_notsplit_PN[threeFL_YELLOW_PN, ]
+
+threeFL_YELLOW_items_PN <- threeFL_YELLOW_PN$Item_No 
+
+# ========================================================================= YELLOW 3 END 
+
+# red list, items that split within or across samples ===================== RED 3 START 
+
+threeFL_split_PN <- with(threeFL_df_PN, which(LoadedFactor %in% c("Com_F1_PosVal, Com_F3_NegVal, MTurk_F2_Negval", "Com_F1_PosVal, Com_F3_NegVal, SMU_F1_CogPosVal", "Com_F1_PosVal, MTurk_F2_Negval, SMU_F1_CogPosVal", "Com_F1_PosVal, MTurk_F2_Negval, SMU_F3_BroadNegVal", "Com_F1_PosVal, SMU_F1_CogPosVal, SMU_F3_BroadNegVal", "Com_F2_BroadPos, Com_F3_NegVal, MTurk_F1_PosVal", " Com_F2_BroadPos, MTurk_F1_PosVal, MTurk_F2_Negval", "Com_F2_BroadPos, MTurk_F2_Negval, SMU_F3_BroadNegVal", "Com_F3_NegVal, MTurk_F1_PosVal, MTurk_F2_Negval", "MTurk_F1_PosVal, MTurk_F2_Negval, SMU_F3_BroadNegVal", "MTurk_F2_Negval, SMU_F2_PhysPosVal, SMU_F3_BroadNegVal")))
+
+threeFL_split_PN <- threeFL_df_PN[threeFL_split_PN, ]
+
+threeFL_split_items_PN <- threeFL_split_PN$Item_No
+
+# ========================================================================= RED 3 END 
+
 ```
 
 ```{r}
-red_list <- sort(c(zeroFL_PN, twoFL_split_items_PN))
+red_list <- sort(c(zeroFL_PN, twoFL_split_items_PN, threeFL_split_items_PN))
 
 knitr::kable(Combined_Overall_PN, booktabs = TRUE) %>%
   row_spec(red_list, bold = T, color = "white", background = "lightsalmon") %>%
@@ -253,7 +302,7 @@ knitr::kable(Combined_Overall_PN, booktabs = TRUE) %>%
 ```
 
 ```{r}
-yellow_list <- sort(c(oneFL_lst4_items_PN, twoFL_YELLOW_items_PN))
+yellow_list <- sort(c(oneFL_lst4_items_PN, twoFL_YELLOW_items_PN, threeFL_YELLOW_items_PN))
 
 knitr::kable(Combined_Overall_PN, booktabs = TRUE) %>%
   row_spec(yellow_list, bold=T, color="darkgray", background = "yellow") %>%
@@ -262,7 +311,7 @@ knitr::kable(Combined_Overall_PN, booktabs = TRUE) %>%
 ```
 
 ```{r}
-green_list <- sort(c(oneFL_grp4_items_PN, twoFL_GREEN_items_PN))
+green_list <- sort(c(oneFL_grp4_items_PN, twoFL_GREEN_items_PN, threeFL_GREEN_items_PN))
 
 knitr::kable(Combined_Overall_PN, booktabs = TRUE) %>%
   row_spec(green_list, bold = T, color = "white", background = "green") %>%
