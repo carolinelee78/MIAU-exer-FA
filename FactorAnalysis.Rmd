@@ -103,99 +103,261 @@ MTurk_Overall_Sample <- read_csv("https://raw.githubusercontent.com/carolinelee7
 SMU_Overall_Sample <- read_csv("https://raw.githubusercontent.com/carolinelee78/MIAU-exer-FA/main/Exercise_SMU_Overall.csv")
 ```
 
-### Analysis
+### Compiling Data 
 
 ```{r, results='asis'}
 ComMTurk_Overall_Sample <- merge(Community_Overall_Sample, MTurk_Overall_Sample, by = "Item_No", all.x = TRUE)
 
 Combined_Overall_Sample <- merge(ComMTurk_Overall_Sample, SMU_Overall_Sample, by = "Item_No", all.x = TRUE)
-
-Combined_Overall_NoPN <- Combined_Overall_Sample[ ,c(1, 5:8, 11:15, 19:23)]
-
-Combined_NoPN_NoNum <- Combined_Overall_NoPN[,-1]
-
-Combined_Overall_NoPN$LoadedFactor <- apply(Combined_NoPN_NoNum, 1, function(i) paste(colnames(Combined_NoPN_NoNum)[!is.na(i) ], collapse = ", "))
-                                        
-color.me <- which(Combined_Overall_NoPN$LoadedFactor == 'SMU_F8_Flo')
 ```
 
-```{r, results='hide'}
+### Analysis For Red Pos/Neg Valence Factors 
+
+```{r, results='asis'}
+Combined_Overall_PN <- Combined_Overall_Sample[ ,c(1, 2:4, 9:10, 16:18)]
+
+Combined_PN_NoNum <- Combined_Overall_PN[,-1]
+
+Combined_Overall_PN$LoadedFactor <- apply(Combined_PN_NoNum, 1, function(i) paste(colnames(Combined_PN_NoNum)[!is.na(i) ], collapse = ", "))
+
 function1 <- function(x) {
-  count.fields(textConnection(Combined_Overall_NoPN$LoadedFactor[x]), sep = ",", blank.lines.skip = FALSE)
+  count.fields(textConnection(Combined_Overall_PN$LoadedFactor[x]), sep = ",", blank.lines.skip = FALSE)
 }
 
-table(function1(1:312))
+tbl1 <- as.data.frame(table(function1(1:312)))
+
+knitr::kable(tbl1)
 ```
 
 ```{r}
-FL_count <- as.list(function1(1:312)) # number of factor loadings per item 
+FL_count_PN <- as.list(function1(1:312)) # number of factor loadings per item 
 
 ### ZERO FACTOR LOADINGS ###
 
 # red list, items that did not load on any factor =========================== RED 1 START
 
-zeroFL <- which(FL_count == 0)
-
-### ONE FACTOR LOADING ###
+zeroFL_PN <- which(FL_count_PN == 0)
 
 # =========================================================================== RED 1 END
 
-oneFL <- which(FL_count == 1) # subsetting for items that loaded on one factor only
+### ONE FACTOR LOADING ###
 
-oneFL_df <- Combined_Overall_NoPN[oneFL, ]
+oneFL_PN <- which(FL_count_PN == 1) # subsetting for items that loaded on one factor only
 
-oneFL_df$loadedFL <- apply(oneFL_df[,-1], 1, function(z) na.omit(z)[1])
+oneFL_df_PN <- Combined_Overall_PN[oneFL_PN, ]
 
-oneFL_df$loadedFL <- as.numeric(oneFL_df$loadedFL)
+oneFL_df_PN$loadedFL <- apply(oneFL_df_PN[,-1], 1, function(z) na.omit(z)[1])
 
-# green list, items that loaded >.4 on one factor, no cross-loadings ======= GREEN 1 START
+oneFL_df_PN$loadedFL <- as.numeric(oneFL_df_PN$loadedFL)
 
-oneFL_grp4 <- which(abs(oneFL_df$loadedFL)>= .40)
+# green list, items that loaded >=.4 on one factor, no cross-loadings ====== GREEN 1 START
 
-oneFL_grp4 <- oneFL_df[oneFL_grp4, ]
+oneFL_grp4_PN <- which(abs(oneFL_df_PN$loadedFL)>= .40)
 
-oneFL_grp4_items <- oneFL_grp4$Item_No 
+oneFL_grp4_PN <- oneFL_df_PN[oneFL_grp4_PN, ]
+
+oneFL_grp4_items_PN <- oneFL_grp4_PN$Item_No 
 
 # ========================================================================== GREEN 1 END
 
 # yellow list, items that loaded on one factor only but with <.4 loading === YELLOW 1 START
 
-oneFL_lst4 <- which(abs(oneFL_df$loadedFL) < .40)
+oneFL_lst4_PN <- which(abs(oneFL_df_PN$loadedFL) < .40)
 
-oneFL_lst4 <- oneFL_df[oneFL_lst4, ]
+oneFL_lst4_PN <- oneFL_df_PN[oneFL_lst4_PN, ]
 
-oneFL_lst4_items <- oneFL_lst4$Item_No
+oneFL_lst4_items_PN <- oneFL_lst4_PN$Item_No
 
 # ========================================================================== YELLOW 1 END
 
 ### TWO FACTOR LOADINGS 
 
+twoFL_PN <- which(FL_count_PN == 2) # subsetting for items that loaded on two factors
 
+twoFL_df_PN <- Combined_Overall_PN[twoFL_PN, ]
+
+tbl2 <- as.data.frame(table(twoFL_df_PN$LoadedFactor))
+
+knitr::kable(tbl2)
+```
+
+```{r}
+twoFL_notsplit_PN <- with(twoFL_df_PN, which(LoadedFactor %in% c("Com_F1_PosVal, MTurk_F1_PosVal", "Com_F1_PosVal, SMU_F1_CogPosVal", "Com_F1_PosVal, SMU_F2_PhysPosVal", "Com_F2_BroadPos, MTurk_F1_PosVal", "Com_F3_NegVal, MTurk_F2_Negval", "MTurk_F1_PosVal, SMU_F1_CogPosVal", "MTurk_F1_PosVal, SMU_F2_PhysPosVal", "MTurk_F2_Negval, SMU_F3_BroadNegVal")))
+
+twoFL_notsplit_PN <- twoFL_df_PN[twoFL_notsplit_PN, ]
+
+twoFL_notsplit_NoNum_PN <- twoFL_notsplit_PN[,-c(1, 10)] # removing non-numerical columns
+
+twoFL_notsplit_PN$firstloading <- apply(twoFL_notsplit_NoNum_PN, 1, function(z) na.omit(z)[1]) # extract first loading 
+
+twoFL_notsplit_PN$secondloading <- apply(twoFL_notsplit_NoNum_PN, 1, function(z) na.omit(z)[2]) # extract second loading 
+
+twoFL_notsplit_PN$firstgrp4 <- ifelse(twoFL_notsplit_PN$firstloading >= .40, TRUE, FALSE)
+
+twoFL_notsplit_PN$secondgrp4 <- ifelse(twoFL_notsplit_PN$secondloading >= .40, TRUE, FALSE)
+
+twoFL_notsplit_PN$category <- ifelse(twoFL_notsplit_PN$firstgrp4 == TRUE & twoFL_notsplit_PN$secondgrp4 == TRUE, "GREEN", "YELLOW")
+
+# items that loaded >=.40 in two different samples (both pos or both neg) = GREEN 2 START
+
+twoFL_GREEN_PN <- with(twoFL_notsplit_PN, which(category %in% "GREEN"))
+
+twoFL_GREEN_PN <- twoFL_notsplit_PN[twoFL_GREEN_PN, ]
+
+twoFL_GREEN_items_PN <- twoFL_GREEN_PN$Item_No 
+
+# ========================================================================= GREEN 2 END 
+
+# items that loaded >=.40 in only one sample or lloaded <.40 in both ====== YELLOW 2 START
+
+twoFL_YELLOW_PN <- with(twoFL_notsplit_PN, which(category %in% "YELLOW"))
+
+twoFL_YELLOW_PN <- twoFL_notsplit_PN[twoFL_YELLOW_PN, ]
+
+twoFL_YELLOW_items_PN <- twoFL_YELLOW_PN$Item_No 
+
+# ========================================================================= YELLOW 2 END 
+
+# red list, items that split within or across samples ===================== RED 2 START
+
+twoFL_split_PN <- with(twoFL_df_PN, which(LoadedFactor %in% c("Com_F2_BroadPos, MTurk_F2_Negval", "Com_F3_NegVal, MTurk_F1_PosVal", "MTurk_F1_PosVal, MTurk_F2_Negval", "MTurk_F2_Negval, SMU_F2_PhysPosVal", "SMU_F2_PhysPosVal, SMU_F3_BroadNegVal")))
+
+twoFL_split_PN <- twoFL_df_PN[twoFL_split_PN, ]
+
+twoFL_split_items_PN <- twoFL_split_PN$Item_No
+
+# ========================================================================= RED 2 END 
+
+### THREE FACTOR LOADINGS 
+
+threeFL_PN <- which(FL_count_PN == 3) # subsetting for items that loaded on three factors
+
+threeFL_df_PN <- Combined_Overall_PN[threeFL_PN, ]
+
+tbl3 <- as.data.frame(table(threeFL_df_PN$LoadedFactor))
+
+knitr::kable(tbl3)
+```
+
+```{r}
+threeFL_split_PN <- with(threeFL_df_PN, which(LoadedFactor %in% c("Com_F1_PosVal, Com_F3_NegVal, MTurk_F2_Negval", "Com_F1_PosVal, Com_F3_NegVal, SMU_F1_CogPosVal")))
+```
+
+```{r}
+red_list <- sort(c(zeroFL_PN, twoFL_split_items_PN))
+
+knitr::kable(Combined_Overall_PN, booktabs = TRUE) %>%
+  row_spec(red_list, bold = T, color = "white", background = "lightsalmon") %>%
+  kable_styling(position="center") %>%
+  scroll_box(height = "300px") 
+```
+
+```{r}
+yellow_list <- sort(c(oneFL_lst4_items_PN, twoFL_YELLOW_items_PN))
+
+knitr::kable(Combined_Overall_PN, booktabs = TRUE) %>%
+  row_spec(yellow_list, bold=T, color="darkgray", background = "yellow") %>%
+  kable_styling(position="center") %>%
+  scroll_box(height = "300px") 
+```
+
+```{r}
+green_list <- sort(c(oneFL_grp4_items_PN, twoFL_GREEN_items_PN))
+
+knitr::kable(Combined_Overall_PN, booktabs = TRUE) %>%
+  row_spec(green_list, bold = T, color = "white", background = "green") %>%
+  kable_styling(position="center") %>%
+  scroll_box(height = "300px") 
+```
+
+### Analysis Excluding Red Pos/Neg Valence Factors 
+
+```{r}
+Combined_Overall_NoPN <- Combined_Overall_Sample[ ,c(1, 5:8, 11:15, 19:23)]
+
+Combined_NoPN_NoNum <- Combined_Overall_NoPN[,-1]
+
+Combined_Overall_NoPN$LoadedFactor <- apply(Combined_NoPN_NoNum, 1, function(i) paste(colnames(Combined_NoPN_NoNum)[!is.na(i) ], collapse = ", "))
+```
+
+```{r, results='asis'}
+function2 <- function(x) {
+  count.fields(textConnection(Combined_Overall_NoPN$LoadedFactor[x]), sep = ",", blank.lines.skip = FALSE)
+}
+
+tbl <- as.data.frame(table(function2(1:312)))
+
+knitr::kable(tbl)
+```
+
+```{r}
+FL_count_NoPN <- as.list(function2(1:312)) # number of factor loadings per item 
+
+### ZERO FACTOR LOADINGS ###
+
+# red list, items that did not load on any factor =========================== RED 1 START
+
+zeroFL_NoPN <- which(FL_count_NoPN == 0)
+
+# =========================================================================== RED 1 END
+
+### ONE FACTOR LOADING ###
+
+oneFL_NoPN <- which(FL_count_NoPN == 1) # subsetting for items that loaded on one factor only
+
+oneFL_df_NoPN <- Combined_Overall_NoPN[oneFL_NoPN, ]
+
+oneFL_df_NoPN$loadedFL <- apply(oneFL_df_NoPN[,-1], 1, function(z) na.omit(z)[1])
+
+oneFL_df_NoPN$loadedFL <- as.numeric(oneFL_df_NoPN$loadedFL)
+
+# green list, items that loaded >=.4 on one factor, no cross-loadings ====== GREEN 1 START
+
+oneFL_grp4_NoPN <- which(abs(oneFL_df_NoPN$loadedFL)>= .40)
+
+oneFL_grp4_NoPN <- oneFL_df_NoPN[oneFL_grp4_NoPN, ]
+
+oneFL_grp4_items_NoPN <- oneFL_grp4_NoPN$Item_No 
+
+# ========================================================================== GREEN 1 END
+
+# yellow list, items that loaded on one factor only but with <.4 loading === YELLOW 1 START
+
+oneFL_lst4_NoPN <- which(abs(oneFL_df_NoPN$loadedFL) < .40)
+
+oneFL_lst4_NoPN <- oneFL_df_NoPN[oneFL_lst4_NoPN, ]
+
+oneFL_lst4_items_NoPN <- oneFL_lst4_NoPN$Item_No
+
+# ========================================================================== YELLOW 1 END
+
+### TWO FACTOR LOADINGS 
+
+twoFL_NoPN <- which(FL_count_NoPN == 2) # subsetting for items that loaded on one factor only
+
+twoFL_df_NoPN <- Combined_Overall_NoPN[twoFL_NoPN, ]
 ```
 
 ```{r}
 knitr::kable(Combined_Overall_NoPN, booktabs = TRUE) %>%
-  row_spec(zeroFL, bold = T, color = "white", background = "lightsalmon") %>%
+  row_spec(zeroFL_NoPN, bold = T, color = "white", background = "lightsalmon") %>%
   kable_styling(position="center") %>%
   scroll_box(height = "300px") 
 ```
 
 ```{r}
 knitr::kable(Combined_Overall_NoPN, booktabs = TRUE) %>%
-  row_spec(oneFL_lst4_items, bold=T, color="darkgray", background = "yellow") %>%
+  row_spec(oneFL_lst4_items_NoPN, bold=T, color="darkgray", background = "yellow") %>%
   kable_styling(position="center") %>%
   scroll_box(height = "300px") 
 ```
 
 ```{r}
 knitr::kable(Combined_Overall_NoPN, booktabs = TRUE) %>%
-  row_spec(oneFL_grp4_items, bold = T, color = "white", background = "green") %>%
+  row_spec(oneFL_grp4_items_NoPN, bold = T, color = "white", background = "green") %>%
   kable_styling(position="center") %>%
   scroll_box(height = "300px") 
 ```
-
-
-
 
 
 
