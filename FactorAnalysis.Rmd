@@ -150,25 +150,25 @@ oneFL_df_PN$loadedFL <- apply(oneFL_df_PN[,-1], 1, function(z) na.omit(z)[1])
 
 oneFL_df_PN$loadedFL <- as.numeric(oneFL_df_PN$loadedFL)
 
-# green list, items that loaded >=.4 on one factor, no cross-loadings ====== GREEN 1 START
+# green list, items that loaded >=.4 & <.75 on one factor ================== YELLOW 1 START
 
-oneFL_grp4_PN <- which(abs(oneFL_df_PN$loadedFL)>= .40)
+oneFL_inrange_PN <- which(abs(oneFL_df_PN$loadedFL)>= .40 & abs(oneFL_df_PN$loadedFL) < .75)
 
-oneFL_grp4_PN <- oneFL_df_PN[oneFL_grp4_PN, ]
+oneFL_inrange_PN <- oneFL_df_PN[oneFL_inrange_PN, ]
 
-oneFL_grp4_items_PN <- oneFL_grp4_PN$Item_No 
-
-# ========================================================================== GREEN 1 END
-
-# yellow list, items that loaded on one factor only but with <.4 loading === YELLOW 1 START
-
-oneFL_lst4_PN <- which(abs(oneFL_df_PN$loadedFL) < .40)
-
-oneFL_lst4_PN <- oneFL_df_PN[oneFL_lst4_PN, ]
-
-oneFL_lst4_items_PN <- oneFL_lst4_PN$Item_No
+oneFL_inrange_items_PN <- oneFL_inrange_PN$Item_No 
 
 # ========================================================================== YELLOW 1 END
+
+# yellow list, items that loaded on one factor only but with <.4 or >=.75 loading == ORANGE 1 START
+
+oneFL_notir_PN <- which(abs(oneFL_df_PN$loadedFL) < .40 | abs(oneFL_df_PN$loadedFL) >= .75)
+
+oneFL_notir_PN <- oneFL_df_PN[oneFL_notir_PN, ]
+
+oneFL_notir_items_PN <- oneFL_notir_PN$Item_No
+
+# ================================================================================== ORANGE 1 END
 
 ### TWO FACTOR LOADINGS 
 
@@ -190,25 +190,20 @@ twoFL_notsplit_NoNum_PN <- twoFL_notsplit_PN[,-c(1, 10)] # removing non-numerica
 
 twoFL_notsplit_PN$firstloading <- apply(twoFL_notsplit_NoNum_PN, 1, function(z) na.omit(z)[1]) # extract first loading 
 
+twoFL_notsplit_PN$firstloading <- as.numeric(twoFL_notsplit_PN$firstloading)
+
 twoFL_notsplit_PN$secondloading <- apply(twoFL_notsplit_NoNum_PN, 1, function(z) na.omit(z)[2]) # extract second loading 
 
-twoFL_notsplit_PN$firstgrp4 <- ifelse(twoFL_notsplit_PN$firstloading >= .40, TRUE, FALSE)
+twoFL_notsplit_PN$secondloading <- as.numeric(twoFL_notsplit_PN$secondloading)
 
-twoFL_notsplit_PN$secondgrp4 <- ifelse(twoFL_notsplit_PN$secondloading >= .40, TRUE, FALSE)
+twoFL_notsplit_PN$firstFL_inrange <- ifelse(abs(twoFL_notsplit_PN$firstloading) >= .40 & abs(twoFL_notsplit_PN$firstloading) < .75, TRUE, FALSE)
 
-twoFL_notsplit_PN$category <- ifelse(twoFL_notsplit_PN$firstgrp4 == TRUE & twoFL_notsplit_PN$secondgrp4 == TRUE, "GREEN", "YELLOW")
+twoFL_notsplit_PN$secondFL_inrange <- ifelse(abs(twoFL_notsplit_PN$secondloading) >= .40 & abs(twoFL_notsplit_PN$secondloading) < .75, TRUE, FALSE)
 
-# items that loaded >=.40 in two different samples (both pos or both neg) = GREEN 2 START
+# no cross-loadings within sample, so no red
+twoFL_notsplit_PN$category <- ifelse(twoFL_notsplit_PN$firstFL_inrange == TRUE & twoFL_notsplit_PN$secondFL_inrange == TRUE, "YELLOW", "ORANGE")
 
-twoFL_GREEN_PN <- with(twoFL_notsplit_PN, which(category %in% "GREEN"))
-
-twoFL_GREEN_PN <- twoFL_notsplit_PN[twoFL_GREEN_PN, ]
-
-twoFL_GREEN_items_PN <- twoFL_GREEN_PN$Item_No 
-
-# ========================================================================= GREEN 2 END 
-
-# items that loaded >=.40 in only one sample or loaded <.40 in both ====== YELLOW 2 START
+# items that loaded in range in two different samples (both pos or both neg) = YELLOW 2 START
 
 twoFL_YELLOW_PN <- with(twoFL_notsplit_PN, which(category %in% "YELLOW"))
 
@@ -218,15 +213,41 @@ twoFL_YELLOW_items_PN <- twoFL_YELLOW_PN$Item_No
 
 # ========================================================================= YELLOW 2 END 
 
-# red list, items that split within or across samples ===================== RED 2 START
+# non-split items that were in range in only one or out of range in both == ORANGE 2 START
+
+twoFL_ORANGE_PN <- with(twoFL_notsplit_PN, which(category %in% "ORANGE"))
+
+twoFL_ORANGE_PN <- twoFL_notsplit_PN[twoFL_ORANGE_PN, ]
+
+twoFL_ORANGE_items_PN <- twoFL_ORANGE_PN$Item_No 
+
+# ========================================================================= ORANGE 2 END 
+
+# orange list, items that split within or across samples but not in range = ORANGE 3 START
 
 twoFL_split_PN <- with(twoFL_df_PN, which(LoadedFactor %in% c("Com_F2_BroadPos, MTurk_F2_Negval", "Com_F3_NegVal, MTurk_F1_PosVal", "MTurk_F1_PosVal, MTurk_F2_Negval", "MTurk_F2_Negval, SMU_F2_PhysPosVal", "SMU_F2_PhysPosVal, SMU_F3_BroadNegVal")))
 
 twoFL_split_PN <- twoFL_df_PN[twoFL_split_PN, ]
 
-twoFL_split_items_PN <- twoFL_split_PN$Item_No
+twoFL_split_NoNum_PN <- twoFL_split_PN[,-c(1, 10)] # removing non-numerical columns
 
-# ========================================================================= RED 2 END 
+twoFL_split_PN$firstloading <- apply(twoFL_split_NoNum_PN, 1, function(z) na.omit(z)[1]) # extract first loading 
+
+twoFL_split_PN$firstloading <- as.numeric(twoFL_split_PN$firstloading)
+
+twoFL_split_PN$secondloading <- apply(twoFL_split_NoNum_PN, 1, function(z) na.omit(z)[2]) # extract second loading 
+
+twoFL_split_PN$secondloading <- as.numeric(twoFL_split_PN$secondloading)
+
+twoFL_split_PN$firstFL_inrange <- ifelse(abs(twoFL_split_PN$firstloading) >= .40 & abs(twoFL_split_PN$firstloading) < .75, TRUE, FALSE)
+
+twoFL_split_PN$secondFL_inrange <- ifelse(abs(twoFL_split_PN$secondloading) >= .40 & abs(twoFL_split_PN$secondloading) < .75, TRUE, FALSE)
+
+# none true-true, so no red
+
+twoFL_split_items_PN <- twoFL_split_PN$Item_No 
+
+# ========================================================================= ORANGE 3 END
 
 ### THREE FACTOR LOADINGS 
 
@@ -248,61 +269,595 @@ threeFL_notsplit_NoNum_PN <- threeFL_notsplit_PN[,-c(1, 10)] # removing non-nume
 
 threeFL_notsplit_PN$firstloading <- apply(threeFL_notsplit_NoNum_PN, 1, function(z) na.omit(z)[1]) # extract first loading 
 
+threeFL_notsplit_PN$firstloading <- as.numeric(threeFL_notsplit_PN$firstloading)
+
 threeFL_notsplit_PN$secondloading <- apply(threeFL_notsplit_NoNum_PN, 1, function(z) na.omit(z)[2]) # extract second loading 
+
+threeFL_notsplit_PN$secondloading <- as.numeric(threeFL_notsplit_PN$secondloading)
 
 threeFL_notsplit_PN$thirdloading <- apply(threeFL_notsplit_NoNum_PN, 1, function(z) na.omit(z)[3]) # extract third loading 
 
-threeFL_notsplit_PN$firstgrp4 <- ifelse(threeFL_notsplit_PN$firstloading >= .40, TRUE, FALSE)
+threeFL_notsplit_PN$thirdloading <- as.numeric(threeFL_notsplit_PN$thirdloading)
 
-threeFL_notsplit_PN$secondgrp4 <- ifelse(threeFL_notsplit_PN$secondloading >= .40, TRUE, FALSE)
+threeFL_notsplit_PN$firstFL_inrange <- ifelse(abs(threeFL_notsplit_PN$firstloading) >= .40 & abs(threeFL_notsplit_PN$firstloading) < .75, TRUE, FALSE)
 
-threeFL_notsplit_PN$thirdgrp4 <- ifelse(threeFL_notsplit_PN$thirdloading >= .40, TRUE, FALSE)
+threeFL_notsplit_PN$secondFL_inrange <- ifelse(abs(threeFL_notsplit_PN$secondloading) >= .40 & abs(threeFL_notsplit_PN$secondloading) < .75, TRUE, FALSE)
 
-threeFL_notsplit_PN$category <- ifelse(threeFL_notsplit_PN$firstgrp4 == TRUE & threeFL_notsplit_PN$secondgrp4 == TRUE & threeFL_notsplit_PN$thirdgrp4 == TRUE, "GREEN", "YELLOW")
+threeFL_notsplit_PN$thirdFL_inrange <- ifelse(abs(threeFL_notsplit_PN$thirdloading) >= .40 & abs(threeFL_notsplit_PN$thirdloading) < .75, TRUE, FALSE)
 
-# items that loaded >=.40 across samples (all pos or all neg) ============= GREEN 3 START
+threeFL_notsplit_PN$category <- ifelse(threeFL_notsplit_PN$firstFL_inrange == TRUE & threeFL_notsplit_PN$secondFL_inrange == TRUE & threeFL_notsplit_PN$thirdFL_inrange == TRUE, "GREEN", "NOT_GREEN")
+
+# items that loaded in range across samples (all pos or all neg) ============= GREEN 1 START
 
 threeFL_GREEN_PN <- with(threeFL_notsplit_PN, which(category %in% "GREEN"))
 
 threeFL_GREEN_PN <- threeFL_notsplit_PN[threeFL_GREEN_PN, ]
 
-threeFL_GREEN_items_PN <- threeFL_GREEN_PN$Item_No 
+threeFL_GREEN_items_PN <- threeFL_GREEN_PN$Item_No # all com, mturk, smu, no cross-loadings, so all green
 
-# ========================================================================= GREEN 3 END 
+# ========================================================================= GREEN 1 END 
 
-# items that were all pos or neg but did not load >=.40 in all samples ==== YELLOW 3 START
+threeFL_NOTGREEN_PN <- with(threeFL_notsplit_PN, which(category %in% "NOT_GREEN"))
 
-threeFL_YELLOW_PN <- with(threeFL_notsplit_PN, which(category %in% "YELLOW"))
+threeFL_NOTGREEN_PN <- threeFL_notsplit_PN[threeFL_NOTGREEN_PN, ]
 
-threeFL_YELLOW_PN <- threeFL_notsplit_PN[threeFL_YELLOW_PN, ]
+threeFL_NOTGREEN_PN$category2 <- ifelse(threeFL_NOTGREEN_PN$firstFL_inrange == FALSE & threeFL_NOTGREEN_PN$secondFL_inrange == FALSE & threeFL_NOTGREEN_PN$thirdFL_inrange == FALSE, "ORANGE", "YELLOW")
 
-threeFL_YELLOW_items_PN <- threeFL_YELLOW_PN$Item_No 
+# ========================================================================= YELLOW 3 START 
+
+threeFL_YELLOW_PN <- with(threeFL_NOTGREEN_PN, which(category2 %in% "YELLOW"))
+
+threeFL_YELLOW_PN <- threeFL_NOTGREEN_PN[threeFL_YELLOW_PN, ]
+
+threeFL_YELLOW_items_PN <- threeFL_YELLOW_PN$Item_No  
 
 # ========================================================================= YELLOW 3 END 
 
-# red list, items that split within or across samples ===================== RED 3 START 
+# ========================================================================= ORANGE 4 START 
+
+threeFL_ORANGE_PN <- with(threeFL_NOTGREEN_PN, which(category2 %in% "ORANGE"))
+
+threeFL_ORANGE_PN <- threeFL_NOTGREEN_PN[threeFL_ORANGE_PN, ]
+
+threeFL_ORANGE_items_PN <- threeFL_ORANGE_PN$Item_No  
+
+# ========================================================================= ORANGE 4 END 
+
+# orange list, items that split within or across samples but none pos & neg in range, no red == ORANGE 5 START 
 
 threeFL_split_PN <- with(threeFL_df_PN, which(LoadedFactor %in% c("Com_F1_PosVal, Com_F3_NegVal, MTurk_F2_Negval", "Com_F1_PosVal, Com_F3_NegVal, SMU_F1_CogPosVal", "Com_F1_PosVal, MTurk_F2_Negval, SMU_F1_CogPosVal", "Com_F1_PosVal, MTurk_F2_Negval, SMU_F3_BroadNegVal", "Com_F1_PosVal, SMU_F1_CogPosVal, SMU_F3_BroadNegVal", "Com_F2_BroadPos, Com_F3_NegVal, MTurk_F1_PosVal", " Com_F2_BroadPos, MTurk_F1_PosVal, MTurk_F2_Negval", "Com_F2_BroadPos, MTurk_F2_Negval, SMU_F3_BroadNegVal", "Com_F3_NegVal, MTurk_F1_PosVal, MTurk_F2_Negval", "MTurk_F1_PosVal, MTurk_F2_Negval, SMU_F3_BroadNegVal", "MTurk_F2_Negval, SMU_F2_PhysPosVal, SMU_F3_BroadNegVal")))
 
 threeFL_split_PN <- threeFL_df_PN[threeFL_split_PN, ]
 
+threeFL_split_NoNum_PN <- threeFL_split_PN[,-c(1, 10)] # removing non-numerical columns
+
+threeFL_split_PN$firstloading <- apply(threeFL_split_NoNum_PN, 1, function(z) na.omit(z)[1]) # extract first loading 
+
+threeFL_split_PN$firstloading <- as.numeric(threeFL_split_PN$firstloading)
+
+threeFL_split_PN$secondloading <- apply(threeFL_split_NoNum_PN, 1, function(z) na.omit(z)[2]) # extract second loading 
+
+threeFL_split_PN$secondloading <- as.numeric(threeFL_split_PN$secondloading)
+
+threeFL_split_PN$thirdloading <- apply(threeFL_split_NoNum_PN, 1, function(z) na.omit(z)[3]) # extract third loading 
+
+threeFL_split_PN$thirdloading <- as.numeric(threeFL_split_PN$thirdloading)
+
+threeFL_split_PN$firstFL_inrange <- ifelse(abs(threeFL_split_PN$firstloading) >= .40 & abs(threeFL_split_PN$firstloading) < .75, TRUE, FALSE)
+
+threeFL_split_PN$secondFL_inrange <- ifelse(abs(threeFL_split_PN$secondloading) >= .40 & abs(threeFL_split_PN$secondloading) < .75, TRUE, FALSE)
+
+threeFL_split_PN$thirdFL_inrange <- ifelse(abs(threeFL_split_PN$thirdloading) >= .40 & abs(threeFL_split_PN$thirdloading) < .75, TRUE, FALSE)
+
 threeFL_split_items_PN <- threeFL_split_PN$Item_No
 
-# ========================================================================= RED 3 END 
+# ========================================================================= ORANGE 5 END 
 
+### FOUR FACTOR LOADINGS 
+
+fourFL_PN <- which(FL_count_PN == 4) # subsetting for items that loaded on four factors
+
+fourFL_df_PN <- Combined_Overall_PN[fourFL_PN, ]
+
+tbl4 <- as.data.frame(table(fourFL_df_PN$LoadedFactor))
+
+knitr::kable(tbl4)
 ```
 
 ```{r}
-red_list <- sort(c(zeroFL_PN, twoFL_split_items_PN, threeFL_split_items_PN))
+fourFL_notsplit_PN <- with(fourFL_df_PN, which(LoadedFactor %in% c("Com_F1_PosVal, Com_F2_BroadPos, MTurk_F1_PosVal, SMU_F1_CogPosVal", "Com_F1_PosVal, Com_F2_BroadPos, MTurk_F1_PosVal, SMU_F2_PhysPosVal", "Com_F1_PosVal, Com_F2_BroadPos, SMU_F1_CogPosVal, SMU_F2_PhysPosVal", "Com_F1_PosVal, MTurk_F1_PosVal, SMU_F1_CogPosVal, SMU_F2_PhysPosVal", "Com_F2_BroadPos, MTurk_F1_PosVal, SMU_F1_CogPosVal, SMU_F2_PhysPosVal")))
+
+fourFL_notsplit_PN <- fourFL_df_PN[fourFL_notsplit_PN, ]
+
+fourFL_notsplit_NoNum_PN <- fourFL_notsplit_PN[,-c(1, 10)] # removing non-numerical columns
+
+fourFL_notsplit_PN$firstloading <- apply(fourFL_notsplit_NoNum_PN, 1, function(z) na.omit(z)[1]) # extract first loading 
+
+fourFL_notsplit_PN$firstloading <- as.numeric(fourFL_notsplit_PN$firstloading)
+
+fourFL_notsplit_PN$secondloading <- apply(fourFL_notsplit_NoNum_PN, 1, function(z) na.omit(z)[2]) # extract second loading 
+
+fourFL_notsplit_PN$secondloading <- as.numeric(fourFL_notsplit_PN$secondloading)
+
+fourFL_notsplit_PN$thirdloading <- apply(fourFL_notsplit_NoNum_PN, 1, function(z) na.omit(z)[3]) # extract third loading
+
+fourFL_notsplit_PN$thirdloading <- as.numeric(fourFL_notsplit_PN$thirdloading)
+
+fourFL_notsplit_PN$fourthloading <- apply(fourFL_notsplit_NoNum_PN, 1, function(z) na.omit(z)[4]) # extract fourth loading
+
+fourFL_notsplit_PN$fourthloading <- as.numeric(fourFL_notsplit_PN$fourthloading)
+
+fourFL_notsplit_PN$firstFL_inrange <- ifelse(abs(fourFL_notsplit_PN$firstloading) >= .40 & abs(fourFL_notsplit_PN$firstloading) < .75, TRUE, FALSE)
+
+fourFL_notsplit_PN$secondFL_inrange <- ifelse(abs(fourFL_notsplit_PN$secondloading) >= .40 & abs(fourFL_notsplit_PN$secondloading) < .75, TRUE, FALSE)
+
+fourFL_notsplit_PN$thirdFL_inrange<- ifelse(abs(fourFL_notsplit_PN$thirdloading) >= .40 & abs(fourFL_notsplit_PN$thirdloading) < .75, TRUE, FALSE)
+
+fourFL_notsplit_PN$fourthFL_inrange <- ifelse(abs(fourFL_notsplit_PN$fourthloading) >= .40 & abs(fourFL_notsplit_PN$fourthloading) < .75, TRUE, FALSE)
+
+fourFL_notsplit_loadings_PN <- fourFL_notsplit_PN[,10:18]
+```
+
+```{r}
+tbl_row1 <- as.data.frame(fourFL_notsplit_loadings_PN[1,])
+
+knitr::kable(tbl_row1) # yellow, good in two out of three samples 
+```
+
+```{r}
+tbl_row2 <- as.data.frame(fourFL_notsplit_loadings_PN[2,])
+
+knitr::kable(tbl_row2) # orange, loaded pos and in range across all three but loaded on two in com, not <.30 in one of the two
+```
+
+```{r}
+tbl_row3 <- as.data.frame(fourFL_notsplit_loadings_PN[3,])
+
+knitr::kable(tbl_row3) # orange, did not load in range on any factor
+```
+
+```{r}
+tbl_row4 <- as.data.frame(fourFL_notsplit_loadings_PN[4,])
+
+knitr::kable(tbl_row4) # yellow, only in range in two of three samples
+```
+
+```{r}
+tbl_row5 <- as.data.frame(fourFL_notsplit_loadings_PN[5,])
+
+knitr::kable(tbl_row5) # green, in range in all samples, cross-loading for smu sample <.30 
+```
+
+```{r}
+tbl_row6 <- as.data.frame(fourFL_notsplit_loadings_PN[6,])
+
+knitr::kable(tbl_row6) # yellow, only in range in two of three samples
+```
+
+```{r}
+tbl_row7 <- as.data.frame(fourFL_notsplit_loadings_PN[7,])
+
+knitr::kable(tbl_row7) # yellow, only in range in two of three samples
+```
+
+```{r}
+tbl_row8 <- as.data.frame(fourFL_notsplit_loadings_PN[8,])
+
+knitr::kable(tbl_row8) # yellow, only in range in one of three samples
+```
+
+```{r}
+tbl_row9 <- as.data.frame(fourFL_notsplit_loadings_PN[9,])
+
+knitr::kable(tbl_row9) # yellow, only in range in one of three samples
+```
+
+```{r}
+tbl_row10 <- as.data.frame(fourFL_notsplit_loadings_PN[10,])
+
+knitr::kable(tbl_row10) # yellow, only in range in two of three samples
+```
+
+```{r}
+tbl_row11 <- as.data.frame(fourFL_notsplit_loadings_PN[11,])
+
+knitr::kable(tbl_row11) # yellow, only in range in one of three samples
+```
+
+```{r}
+tbl_row12 <- as.data.frame(fourFL_notsplit_loadings_PN[12,])
+
+knitr::kable(tbl_row12) # yellow, only in range in one of three samples
+```
+
+```{r}
+tbl_row13 <- as.data.frame(fourFL_notsplit_loadings_PN[13,])
+
+knitr::kable(tbl_row13) # yellow, only in range in one of three samples
+```
+
+```{r}
+tbl_row14 <- as.data.frame(fourFL_notsplit_loadings_PN[14,])
+
+knitr::kable(tbl_row14) # orange, in range for only com and smu and had cross-loading >.30 in smu
+```
+
+```{r}
+tbl_row15 <- as.data.frame(fourFL_notsplit_loadings_PN[15,])
+
+knitr::kable(tbl_row15) # orange, did not load in range on any factor
+```
+
+```{r}
+tbl_row16 <- as.data.frame(fourFL_notsplit_loadings_PN[16,])
+
+knitr::kable(tbl_row16) # yellow, only in range on two of three samples
+```
+
+```{r}
+tbl_row17 <- as.data.frame(fourFL_notsplit_loadings_PN[17,])
+
+knitr::kable(tbl_row17) # green, in range in all samples, cross-loading for smu sample <.30 
+```
+
+```{r}
+tbl_row18 <- as.data.frame(fourFL_notsplit_loadings_PN[18,])
+
+knitr::kable(tbl_row18) # yellow, only in range on two of three samples
+```
+
+```{r}
+tbl_row19 <- as.data.frame(fourFL_notsplit_loadings_PN[19,])
+
+knitr::kable(tbl_row19) # yellow, only in range on two of three samples
+```
+
+```{r}
+tbl_row20 <- as.data.frame(fourFL_notsplit_loadings_PN[20,])
+
+knitr::kable(tbl_row20) # yellow, only in range on two of three samples
+```
+
+```{r}
+# non-split items that were green as indicated above ======================== GREEN 2 START 
+
+fourFL_GREEN_PN <- fourFL_notsplit_PN[c(5, 17),]
+
+fourFL_GREEN_items_PN <- fourFL_GREEN_PN$Item_No
+
+# =========================================================================== GREEN 2 END 
+
+# non-split items that were yellow as indicated above ======================== YELLOW 4 START 
+
+fourFL_YELLOW_PN <- fourFL_notsplit_PN[-c(2, 3, 5, 14, 15, 17),]
+
+fourFL_YELLOW_items_PN <- fourFL_YELLOW_PN$Item_No
+
+# =========================================================================== YELLOW 4 END 
+
+# non-split items that were orange as indicated above ======================== ORANGE 6 START 
+
+fourFL_ORANGE_PN <- fourFL_notsplit_PN[c(2, 3, 14, 15),]
+
+fourFL_ORANGE_items_PN <- fourFL_ORANGE_PN$Item_No
+
+# =========================================================================== ORANGE 6 END 
+```
+
+```{r}
+fourFL_split_PN <- with(fourFL_df_PN, which(LoadedFactor %in% c("Com_F2_BroadPos, Com_F3_NegVal, MTurk_F1_PosVal, MTurk_F2_Negval", "Com_F2_BroadPos, Com_F3_NegVal, MTurk_F1_PosVal, SMU_F2_PhysPosVal", "Com_F2_BroadPos, Com_F3_NegVal, MTurk_F2_Negval, SMU_F3_BroadNegVal", "Com_F2_BroadPos, MTurk_F2_Negval, SMU_F1_CogPosVal, SMU_F2_PhysPosVal", "Com_F2_BroadPos, MTurk_F2_Negval, SMU_F2_PhysPosVal, SMU_F3_BroadNegVal", "Com_F3_NegVal, MTurk_F1_PosVal, MTurk_F2_Negval, SMU_F2_PhysPosVal", "Com_F3_NegVal, MTurk_F1_PosVal, MTurk_F2_Negval, SMU_F3_BroadNegVal", "Com_F3_NegVal, MTurk_F2_Negval, SMU_F1_CogPosVal, SMU_F3_BroadNegVal", "MTurk_F1_PosVal, MTurk_F2_Negval, SMU_F2_PhysPosVal, SMU_F3_BroadNegVal")))
+
+fourFL_split_PN <- fourFL_df_PN[fourFL_split_PN, ]
+
+fourFL_split_NoNum_PN <- fourFL_split_PN[,-c(1, 10)] # removing non-numerical columns
+
+fourFL_split_PN$firstloading <- apply(fourFL_split_NoNum_PN, 1, function(z) na.omit(z)[1]) # extract first loading 
+
+fourFL_split_PN$firstloading <- as.numeric(fourFL_split_PN$firstloading) 
+
+fourFL_split_PN$secondloading <- apply(fourFL_split_NoNum_PN, 1, function(z) na.omit(z)[2]) # extract second loading 
+
+fourFL_split_PN$secondloading <- as.numeric(fourFL_split_PN$secondloading)
+
+fourFL_split_PN$thirdloading <- apply(fourFL_split_NoNum_PN, 1, function(z) na.omit(z)[3]) # extract third loading
+
+fourFL_split_PN$thirdloading <- as.numeric(fourFL_split_PN$thirdloading)
+
+fourFL_split_PN$fourthloading <- apply(fourFL_split_NoNum_PN, 1, function(z) na.omit(z)[4]) # extract fourth loading
+
+fourFL_split_PN$fourthloading <- as.numeric(fourFL_split_PN$fourthloading)
+
+fourFL_split_PN$firstFL_inrange <- ifelse(abs(fourFL_split_PN$firstloading) >= .40 & abs(fourFL_split_PN$firstloading) < .75, TRUE, FALSE)
+
+fourFL_split_PN$secondFL_inrange <- ifelse(abs(fourFL_split_PN$secondloading) >= .40 & abs(fourFL_split_PN$secondloading) < .75, TRUE, FALSE)
+
+fourFL_split_PN$thirdFL_inrange<- ifelse(abs(fourFL_split_PN$thirdloading) >= .40 & abs(fourFL_split_PN$thirdloading) < .75, TRUE, FALSE)
+
+fourFL_split_PN$fourthFL_inrange <- ifelse(abs(fourFL_split_PN$fourthloading) >= .40 & abs(fourFL_split_PN$fourthloading) < .75, TRUE, FALSE)
+
+fourFL_split_loadings_PN <- fourFL_split_PN[,10:18]
+```
+
+```{r}
+split_tbl_row1 <- as.data.frame(fourFL_split_loadings_PN[1,])
+
+knitr::kable(split_tbl_row1) # orange
+```
+
+```{r}
+split_tbl_row2 <- as.data.frame(fourFL_split_loadings_PN[2,])
+
+knitr::kable(split_tbl_row2) # orange
+```
+
+```{r}
+split_tbl_row3 <- as.data.frame(fourFL_split_loadings_PN[3,])
+
+knitr::kable(split_tbl_row3) # red
+```
+
+```{r}
+split_tbl_row4 <- as.data.frame(fourFL_split_loadings_PN[4,])
+
+knitr::kable(split_tbl_row4) # orange
+```
+
+```{r}
+split_tbl_row5 <- as.data.frame(fourFL_split_loadings_PN[5,])
+
+knitr::kable(split_tbl_row5) # orange
+```
+
+```{r}
+split_tbl_row6 <- as.data.frame(fourFL_split_loadings_PN[6,])
+
+knitr::kable(split_tbl_row6) # orange
+```
+
+```{r}
+split_tbl_row7 <- as.data.frame(fourFL_split_loadings_PN[7,])
+
+knitr::kable(split_tbl_row7) # orange
+```
+
+```{r}
+split_tbl_row8 <- as.data.frame(fourFL_split_loadings_PN[8,])
+
+knitr::kable(split_tbl_row8) # orange
+```
+
+```{r}
+split_tbl_row9 <- as.data.frame(fourFL_split_loadings_PN[9,])
+
+knitr::kable(split_tbl_row9) # orange
+```
+
+```{r}
+split_tbl_row10 <- as.data.frame(fourFL_split_loadings_PN[10,])
+
+knitr::kable(split_tbl_row10) # orange
+```
+
+```{r}
+split_tbl_row11 <- as.data.frame(fourFL_split_loadings_PN[11,])
+
+knitr::kable(split_tbl_row11) # orange
+```
+
+```{r}
+split_tbl_row12 <- as.data.frame(fourFL_split_loadings_PN[12,])
+
+knitr::kable(split_tbl_row12) # red
+```
+
+```{r}
+split_tbl_row13 <- as.data.frame(fourFL_split_loadings_PN[13,])
+
+knitr::kable(split_tbl_row13) # orange
+```
+
+```{r}
+split_tbl_row14 <- as.data.frame(fourFL_split_loadings_PN[14,])
+
+knitr::kable(split_tbl_row14) # red
+```
+
+```{r}
+split_tbl_row15 <- as.data.frame(fourFL_split_loadings_PN[15,])
+
+knitr::kable(split_tbl_row15) # orange
+```
+
+```{r}
+split_tbl_row16 <- as.data.frame(fourFL_split_loadings_PN[16,])
+
+knitr::kable(split_tbl_row16) # orange
+```
+
+```{r}
+split_tbl_row17 <- as.data.frame(fourFL_split_loadings_PN[17,])
+
+knitr::kable(split_tbl_row17) # orange
+```
+
+```{r}
+split_tbl_row18 <- as.data.frame(fourFL_split_loadings_PN[18,])
+
+knitr::kable(split_tbl_row18) # orange
+```
+
+```{r}
+# split items that were orange as indicated above =========================== ORANGE 7 START 
+
+fourFL_split_ORANGE_PN <- fourFL_split_PN[-c(3, 12, 14),]
+
+fourFL_split_ORANGE_items_PN <- fourFL_split_ORANGE_PN$Item_No
+
+# =========================================================================== ORANGE 7 END 
+
+# split items that were red as indicated above ============================== RED 2 START 
+
+fourFL_split_RED_PN <- fourFL_split_PN[c(3, 12, 14),]
+
+fourFL_split_RED_items_PN <- fourFL_split_RED_PN$Item_No
+
+# =========================================================================== RED 2 END 
+
+### FIVE FACTOR LOADINGS 
+
+fiveFL_PN <- which(FL_count_PN == 5) # subsetting for items that loaded on four factors
+
+fiveFL_df_PN <- Combined_Overall_PN[fiveFL_PN, ]
+
+tbl5 <- as.data.frame(table(fiveFL_df_PN$LoadedFactor))
+
+knitr::kable(tbl5)
+```
+
+```{r}
+fiveFL_NoNum_PN <- fiveFL_df_PN[,-c(1, 10)] # removing non-numerical columns
+
+fiveFL_df_PN$firstloading <- apply(fiveFL_NoNum_PN, 1, function(z) na.omit(z)[1]) # extract first loading 
+
+fiveFL_df_PN$firstloading <- as.numeric(fiveFL_df_PN$firstloading) 
+
+fiveFL_df_PN$secondloading <- apply(fiveFL_NoNum_PN, 1, function(z) na.omit(z)[2]) # extract second loading 
+
+fiveFL_df_PN$secondloading <- as.numeric(fiveFL_df_PN$secondloading)
+
+fiveFL_df_PN$thirdloading <- apply(fiveFL_NoNum_PN, 1, function(z) na.omit(z)[3]) # extract third loading
+
+fiveFL_df_PN$thirdloading <- as.numeric(fiveFL_df_PN$thirdloading)
+
+fiveFL_df_PN$fourthloading <- apply(fiveFL_NoNum_PN, 1, function(z) na.omit(z)[4]) # extract fourth loading
+
+fiveFL_df_PN$fourthloading <- as.numeric(fiveFL_df_PN$fourthloading)
+
+fiveFL_df_PN$fifthloading <- apply(fiveFL_NoNum_PN, 1, function(z) na.omit(z)[5]) # extract fourth loading
+
+fiveFL_df_PN$fifthloading <- as.numeric(fiveFL_df_PN$fifthloading)
+
+fiveFL_df_PN$firstFL_inrange <- ifelse(abs(fiveFL_df_PN$firstloading) >= .40 & abs(fiveFL_df_PN$firstloading) < .75, TRUE, FALSE)
+
+fiveFL_df_PN$secondFL_inrange <- ifelse(abs(fiveFL_df_PN$secondloading) >= .40 & abs(fiveFL_df_PN$secondloading) < .75, TRUE, FALSE)
+
+fiveFL_df_PN$thirdFL_inrange<- ifelse(abs(fiveFL_df_PN$thirdloading) >= .40 & abs(fiveFL_df_PN$thirdloading) < .75, TRUE, FALSE)
+
+fiveFL_df_PN$fourthFL_inrange <- ifelse(abs(fiveFL_df_PN$fourthloading) >= .40 & abs(fiveFL_df_PN$fourthloading) < .75, TRUE, FALSE)
+
+fiveFL_df_PN$fifthFL_inrange <- ifelse(abs(fiveFL_df_PN$fifthloading) >= .40 & abs(fiveFL_df_PN$fifthloading) < .75, TRUE, FALSE)
+
+fiveFL_df_loadings_PN <- fiveFL_df_PN[,10:20]
+```
+
+```{r}
+fiveFL_tbl_row1 <- as.data.frame(fiveFL_df_loadings_PN[1,])
+
+knitr::kable(fiveFL_tbl_row1) # green, loaded in range in all three samples, cross-loadings for com and smu <.30
+```
+
+```{r}
+fiveFL_tbl_row2 <- as.data.frame(fiveFL_df_loadings_PN[2,])
+
+knitr::kable(fiveFL_tbl_row2) # orange, loaded in range in all three samples but also had cross-loadings >.30 for com and smu
+```
+
+```{r}
+fiveFL_tbl_row3 <- as.data.frame(fiveFL_df_loadings_PN[3,])
+
+knitr::kable(fiveFL_tbl_row3) # yellow, in range in only two of three samples, no cross-loadings >.30
+```
+
+```{r}
+fiveFL_tbl_row4 <- as.data.frame(fiveFL_df_loadings_PN[4,])
+
+knitr::kable(fiveFL_tbl_row4) # green, loaded in range in all three samples, cross-loadings for com and smu <.30
+```
+
+```{r}
+fiveFL_tbl_row5 <- as.data.frame(fiveFL_df_loadings_PN[5,])
+
+knitr::kable(fiveFL_tbl_row5) # red, in range for both pos and neg val factors in mturk
+```
+
+```{r}
+fiveFL_tbl_row6 <- as.data.frame(fiveFL_df_loadings_PN[6,])
+
+knitr::kable(fiveFL_tbl_row6) # orange, had weak loadings across both pos and neg factors although in range for only mturk annd smu neg
+```
+
+```{r}
+fiveFL_tbl_row7 <- as.data.frame(fiveFL_df_loadings_PN[7,])
+
+knitr::kable(fiveFL_tbl_row7) # orange, had weak loadings across both pos and neg factors although in range for only com and mturk neg
+```
+
+```{r}
+fiveFL_tbl_row8 <- as.data.frame(fiveFL_df_loadings_PN[8,])
+
+knitr::kable(fiveFL_tbl_row8) # orange, had weak loadings across both pos and neg factors although in range for only smu pos
+```
+
+```{r}
+fiveFL_tbl_row9 <- as.data.frame(fiveFL_df_loadings_PN[9,])
+
+knitr::kable(fiveFL_tbl_row9) # orange, had weak loadings across both pos and neg factors although in range for only mturk pos
+```
+
+```{r}
+# items that were green as indicated above ================================== GREEN 3 START
+
+fiveFL_GREEN_PN <- fiveFL_df_PN[c(1, 4),]
+
+fiveFL_GREEN_items_PN <- fiveFL_GREEN_PN$Item_No
+
+# =========================================================================== GREEN 3 END
+
+# items that were yellow as indicated above ================================= YELLOW 5 START
+
+fiveFL_YELLOW_PN <- fiveFL_df_PN[c(3),]
+
+fiveFL_YELLOW_items_PN <- fiveFL_YELLOW_PN$Item_No
+
+# =========================================================================== YELLOW 5 END
+
+# items that were orange as indicated above ================================= ORANGE 8 START 
+
+fiveFL_ORANGE_PN <- fiveFL_df_PN[c(5),]
+
+fiveFL_ORANGE_items_PN <- fiveFL_ORANGE_PN$Item_No
+
+# =========================================================================== ORANGE 8 END
+
+# items that were red as indicated above ==================================== RED 3 START 
+
+fiveFL_RED_PN <- fiveFL_df_PN[-c(1, 3, 4, 5),]
+
+fiveFL_RED_items_PN <- fiveFL_RED_PN$Item_No
+
+# =========================================================================== RED 3 END
+```
+
+```{r}
+red_list <- sort(c(zeroFL_PN))
 
 knitr::kable(Combined_Overall_PN, booktabs = TRUE) %>%
-  row_spec(red_list, bold = T, color = "white", background = "lightsalmon") %>%
+  row_spec(red_list, bold = T, color = "white", background = "red") %>%
   kable_styling(position="center") %>%
   scroll_box(height = "300px") 
 ```
 
 ```{r}
-yellow_list <- sort(c(oneFL_lst4_items_PN, twoFL_YELLOW_items_PN, threeFL_YELLOW_items_PN))
+orange_list <- sort(c())
+
+knitr::kable(Combined_Overall_PN, booktabs = TRUE) %>%
+  row_spec(red_list, bold = T, color = "white", background = "orange") %>%
+  kable_styling(position="center") %>%
+  scroll_box(height = "300px") 
+```
+
+```{r}
+yellow_list <- sort(c())
 
 knitr::kable(Combined_Overall_PN, booktabs = TRUE) %>%
   row_spec(yellow_list, bold=T, color="darkgray", background = "yellow") %>%
@@ -311,7 +866,7 @@ knitr::kable(Combined_Overall_PN, booktabs = TRUE) %>%
 ```
 
 ```{r}
-green_list <- sort(c(oneFL_grp4_items_PN, twoFL_GREEN_items_PN, threeFL_GREEN_items_PN))
+green_list <- sort(c())
 
 knitr::kable(Combined_Overall_PN, booktabs = TRUE) %>%
   row_spec(green_list, bold = T, color = "white", background = "green") %>%
