@@ -46,9 +46,11 @@ knitr::knit_hooks$set(output = function(x, options){
 # loading packages 
 lapply(c("tidyverse"),pkgTest)
 lapply(c("readr"),pkgTest)
+lapply(c("paletteer"),pkgTest)
 lapply(c("kableExtra"),pkgTest)
 library(tidyverse)
 library(readr)
+library(paletteer)
 library(kableExtra)
 ```
 
@@ -96,11 +98,14 @@ pre {
 ### Importing Data  
 
 ```{r}
-Community_Overall_Sample <- read_csv("https://raw.githubusercontent.com/carolinelee78/MIAU-exer-FA/main/Exercise_Com_Overall.csv")
 
-MTurk_Overall_Sample <- read_csv("https://raw.githubusercontent.com/carolinelee78/MIAU-exer-FA/main/Exercise_MTurk_Overall.csv")
+setwd("/Users/carolinelee/Desktop/MIAU-exer-FA")
 
-SMU_Overall_Sample <- read_csv("https://raw.githubusercontent.com/carolinelee78/MIAU-exer-FA/main/Exercise_SMU_Overall.csv")
+Community_Overall_Sample <- read_csv("Exercise_Com_Overall.csv")
+
+MTurk_Overall_Sample <- read_csv("Exercise_MTurk_Overall.csv")
+
+SMU_Overall_Sample <- read_csv("Exercise_SMU_Overall.csv")
 ```
 
 ### Compiling Data 
@@ -160,7 +165,7 @@ oneFL_inrange_items_PN <- oneFL_inrange_PN$Item_No
 
 # ========================================================================== YELLOW 1 END
 
-# yellow list, items that loaded on one factor only but with <.4 or >=.75 loading == ORANGE 1 START
+# orange  list, items that loaded on one factor only but with <.4 or >=.75 loading == ORANGE 1 START
 
 oneFL_notir_PN <- which(abs(oneFL_df_PN$loadedFL) < .40 | abs(oneFL_df_PN$loadedFL) >= .75)
 
@@ -325,7 +330,7 @@ threeFL_ORANGE_items_PN <- threeFL_ORANGE_PN$Item_No
 
 # orange list, items that split within or across samples but none pos & neg in range, no red == ORANGE 5 START 
 
-threeFL_split_PN <- with(threeFL_df_PN, which(LoadedFactor %in% c("Com_F1_PosVal, Com_F3_NegVal, MTurk_F2_Negval", "Com_F1_PosVal, Com_F3_NegVal, SMU_F1_CogPosVal", "Com_F1_PosVal, MTurk_F2_Negval, SMU_F1_CogPosVal", "Com_F1_PosVal, MTurk_F2_Negval, SMU_F3_BroadNegVal", "Com_F1_PosVal, SMU_F1_CogPosVal, SMU_F3_BroadNegVal", "Com_F2_BroadPos, Com_F3_NegVal, MTurk_F1_PosVal", " Com_F2_BroadPos, MTurk_F1_PosVal, MTurk_F2_Negval", "Com_F2_BroadPos, MTurk_F2_Negval, SMU_F3_BroadNegVal", "Com_F3_NegVal, MTurk_F1_PosVal, MTurk_F2_Negval", "MTurk_F1_PosVal, MTurk_F2_Negval, SMU_F3_BroadNegVal", "MTurk_F2_Negval, SMU_F2_PhysPosVal, SMU_F3_BroadNegVal")))
+threeFL_split_PN <- with(threeFL_df_PN, which(LoadedFactor %in% c("Com_F1_PosVal, Com_F3_NegVal, MTurk_F2_Negval", "Com_F1_PosVal, Com_F3_NegVal, SMU_F1_CogPosVal", "Com_F1_PosVal, MTurk_F2_Negval, SMU_F1_CogPosVal", "Com_F1_PosVal, MTurk_F2_Negval, SMU_F3_BroadNegVal", "Com_F1_PosVal, SMU_F1_CogPosVal, SMU_F3_BroadNegVal", "Com_F2_BroadPos, Com_F3_NegVal, MTurk_F1_PosVal", "Com_F2_BroadPos, MTurk_F1_PosVal, MTurk_F2_Negval", "Com_F2_BroadPos, MTurk_F2_Negval, SMU_F3_BroadNegVal", "Com_F3_NegVal, MTurk_F1_PosVal, MTurk_F2_Negval", "MTurk_F1_PosVal, MTurk_F2_Negval, SMU_F3_BroadNegVal", "MTurk_F2_Negval, SMU_F2_PhysPosVal, SMU_F3_BroadNegVal")))
 
 threeFL_split_PN <- threeFL_df_PN[threeFL_split_PN, ]
 
@@ -705,7 +710,7 @@ fourFL_split_RED_items_PN <- fourFL_split_RED_PN$Item_No
 
 ### FIVE FACTOR LOADINGS 
 
-fiveFL_PN <- which(FL_count_PN == 5) # subsetting for items that loaded on four factors
+fiveFL_PN <- which(FL_count_PN == 5) # subsetting for items that loaded on five factors
 
 fiveFL_df_PN <- Combined_Overall_PN[fiveFL_PN, ]
 
@@ -733,7 +738,7 @@ fiveFL_df_PN$fourthloading <- apply(fiveFL_NoNum_PN, 1, function(z) na.omit(z)[4
 
 fiveFL_df_PN$fourthloading <- as.numeric(fiveFL_df_PN$fourthloading)
 
-fiveFL_df_PN$fifthloading <- apply(fiveFL_NoNum_PN, 1, function(z) na.omit(z)[5]) # extract fourth loading
+fiveFL_df_PN$fifthloading <- apply(fiveFL_NoNum_PN, 1, function(z) na.omit(z)[5]) # extract fifth loading
 
 fiveFL_df_PN$fifthloading <- as.numeric(fiveFL_df_PN$fifthloading)
 
@@ -836,42 +841,131 @@ fiveFL_RED_PN <- fiveFL_df_PN[-c(1, 3, 4, 5),]
 fiveFL_RED_items_PN <- fiveFL_RED_PN$Item_No
 
 # =========================================================================== RED 3 END
+
+### SIX FACTOR LOADINGS 
+
+sixFL_PN <- which(FL_count_PN == 6) # subsetting for items that loaded on six factors
+
+sixFL_df_PN <- Combined_Overall_PN[sixFL_PN, ]
+
+tbl6 <- as.data.frame(table(sixFL_df_PN$LoadedFactor))
+
+knitr::kable(tbl6)
 ```
 
 ```{r}
-red_list <- sort(c(zeroFL_PN))
+sixFL_NoNum_PN <- sixFL_df_PN[,-c(1, 10)] # removing non-numerical columns
 
-knitr::kable(Combined_Overall_PN, booktabs = TRUE) %>%
-  row_spec(red_list, bold = T, color = "white", background = "red") %>%
-  kable_styling(position="center") %>%
-  scroll_box(height = "300px") 
+sixFL_df_PN$firstloading <- apply(sixFL_NoNum_PN, 1, function(z) na.omit(z)[1]) # extract first loading 
+
+sixFL_df_PN$firstloading <- as.numeric(sixFL_df_PN$firstloading) 
+
+sixFL_df_PN$secondloading <- apply(sixFL_NoNum_PN, 1, function(z) na.omit(z)[2]) # extract second loading 
+
+sixFL_df_PN$secondloading <- as.numeric(sixFL_df_PN$secondloading)
+
+sixFL_df_PN$thirdloading <- apply(sixFL_NoNum_PN, 1, function(z) na.omit(z)[3]) # extract third loading
+
+sixFL_df_PN$thirdloading <- as.numeric(sixFL_df_PN$thirdloading)
+
+sixFL_df_PN$fourthloading <- apply(sixFL_NoNum_PN, 1, function(z) na.omit(z)[4]) # extract fourth loading
+
+sixFL_df_PN$fourthloading <- as.numeric(sixFL_df_PN$fourthloading)
+
+sixFL_df_PN$fifthloading <- apply(sixFL_NoNum_PN, 1, function(z) na.omit(z)[5]) # extract fifth loading
+
+sixFL_df_PN$fifthloading <- as.numeric(sixFL_df_PN$fifthloading)
+
+sixFL_df_PN$sixthloading <- apply(sixFL_NoNum_PN, 1, function(z) na.omit(z)[6]) # extract sixth loading
+
+sixFL_df_PN$sixthloading <- as.numeric(sixFL_df_PN$sixthloading)
+
+sixFL_df_PN$firstFL_inrange <- ifelse(abs(sixFL_df_PN$firstloading) >= .40 & abs(sixFL_df_PN$firstloading) < .75, TRUE, FALSE)
+
+sixFL_df_PN$secondFL_inrange <- ifelse(abs(sixFL_df_PN$secondloading) >= .40 & abs(sixFL_df_PN$secondloading) < .75, TRUE, FALSE)
+
+sixFL_df_PN$thirdFL_inrange<- ifelse(abs(sixFL_df_PN$thirdloading) >= .40 & abs(sixFL_df_PN$thirdloading) < .75, TRUE, FALSE)
+
+sixFL_df_PN$fourthFL_inrange <- ifelse(abs(sixFL_df_PN$fourthloading) >= .40 & abs(sixFL_df_PN$fourthloading) < .75, TRUE, FALSE)
+
+sixFL_df_PN$fifthFL_inrange <- ifelse(abs(sixFL_df_PN$fifthloading) >= .40 & abs(sixFL_df_PN$fifthloading) < .75, TRUE, FALSE)
+
+sixFL_df_PN$sixthFL_inrange <- ifelse(abs(sixFL_df_PN$fifthloading) >= .40 & abs(sixFL_df_PN$sixthloading) < .75, TRUE, FALSE)
+
+sixFL_df_loadings_PN <- sixFL_df_PN[,10:22]
 ```
 
 ```{r}
-orange_list <- sort(c())
+sixFL_tbl_row1 <- as.data.frame(sixFL_df_loadings_PN[1,])
 
-knitr::kable(Combined_Overall_PN, booktabs = TRUE) %>%
-  row_spec(red_list, bold = T, color = "white", background = "orange") %>%
-  kable_styling(position="center") %>%
-  scroll_box(height = "300px") 
+knitr::kable(sixFL_tbl_row1) # orange, had weak loadings across both pos and neg factors although in range for only com and mturk pos
 ```
 
 ```{r}
-yellow_list <- sort(c())
+sixFL_tbl_row2 <- as.data.frame(sixFL_df_loadings_PN[2,])
 
-knitr::kable(Combined_Overall_PN, booktabs = TRUE) %>%
-  row_spec(yellow_list, bold=T, color="darkgray", background = "yellow") %>%
-  kable_styling(position="center") %>%
-  scroll_box(height = "300px") 
+knitr::kable(sixFL_tbl_row2) # orange, had weak loadings across both pos and neg factors although in range for only com and mturk neg
 ```
 
 ```{r}
-green_list <- sort(c())
+# ============================================================ ORANGE 9 START 
 
+sixFL_items_PN <- sixFL_df_PN$Item_No
+
+# ============================================================ ORANGE 9 END
+```
+
+```{r}
+red_list <- sort(c(zeroFL_PN, fourFL_split_RED_items_PN, fiveFL_RED_items_PN))
+
+orange_list <- sort(c(oneFL_notir_items_PN, twoFL_ORANGE_items_PN, twoFL_split_items_PN, threeFL_ORANGE_items_PN, threeFL_split_items_PN, fourFL_ORANGE_items_PN, fourFL_split_ORANGE_items_PN, fiveFL_ORANGE_items_PN, sixFL_items_PN))
+
+yellow_list <- sort(c(oneFL_inrange_items_PN, twoFL_YELLOW_items_PN, threeFL_YELLOW_items_PN, fourFL_YELLOW_items_PN, fiveFL_YELLOW_items_PN))
+
+green_list <- sort(c(threeFL_GREEN_items_PN, fourFL_GREEN_items_PN, fiveFL_GREEN_items_PN))
+
+```
+
+```{r}
+Combined_Overall_PN$category <- ifelse(Combined_Overall_PN$Item_No %in% red_list, 1, 
+                                        ifelse(Combined_Overall_PN$Item_No %in% orange_list, 2, 
+                                               ifelse(Combined_Overall_PN$Item_No %in% yellow_list, 3, 4)))
+
+my_backgrounds <- c("red", "orange", "yellow", "lawngreen")     
+
+spec_color2 <- function(x, alpha = 1, begin = 0, end = 1,
+         direction = 1, option = "D",
+         na_color = "#BBBBBB", scale_from = NULL,
+         palette = viridisLite::viridis(256, alpha, begin, end, direction, option)) {
+  n <- length(palette)
+  if (is.null(scale_from)) {
+    x <- round(scales::rescale(x, c(1, n)))
+  } else {
+    x <- round(scales::rescale(x, to = c(1, n),
+                       from = scale_from))
+  }
+  
+  color_code <- palette[x]
+  color_code[is.na(color_code)] <- na_color
+  return(color_code)
+}
+```
+
+```{r}
+item_list <- read_csv("itemlist.csv", col_names = FALSE)
+```
+
+```{r}
+Combined_Overall_PN$Item <- item_list$X1
+
+Combined_Overall_PN <- Combined_Overall_PN[ ,c(1, 12, 2:11)]
+```
+
+```{r}
 knitr::kable(Combined_Overall_PN, booktabs = TRUE) %>%
-  row_spec(green_list, bold = T, color = "white", background = "green") %>%
+  column_spec(1:12, color = "black", background = spec_color2(Combined_Overall_PN$category, palette = my_backgrounds)) %>%
   kable_styling(position="center") %>%
-  scroll_box(height = "300px") 
+  scroll_box(height = "300px")  
 ```
 
 ### Analysis Excluding Red Pos/Neg Valence Factors 
@@ -889,92 +983,1386 @@ function2 <- function(x) {
   count.fields(textConnection(Combined_Overall_NoPN$LoadedFactor[x]), sep = ",", blank.lines.skip = FALSE)
 }
 
-tbl <- as.data.frame(table(function2(1:312)))
+tbl_NP <- as.data.frame(table(function2(1:312)))
 
-knitr::kable(tbl)
+knitr::kable(tbl_NP)
 ```
 
 ```{r}
-FL_count_NoPN <- as.list(function2(1:312)) # number of factor loadings per item 
+FL_count_NP <- as.list(function2(1:312)) # number of factor loadings per item 
 
 ### ZERO FACTOR LOADINGS ###
 
 # red list, items that did not load on any factor =========================== RED 1 START
 
-zeroFL_NoPN <- which(FL_count_NoPN == 0)
+zeroFL_NP <- which(FL_count_NP == 0)
 
 # =========================================================================== RED 1 END
 
 ### ONE FACTOR LOADING ###
 
-oneFL_NoPN <- which(FL_count_NoPN == 1) # subsetting for items that loaded on one factor only
+oneFL_NP <- which(FL_count_NP == 1) # subsetting for items that loaded on one factor only
 
-oneFL_df_NoPN <- Combined_Overall_NoPN[oneFL_NoPN, ]
+oneFL_df_NP <- Combined_Overall_NoPN[oneFL_NP, ]
 
-oneFL_df_NoPN$loadedFL <- apply(oneFL_df_NoPN[,-1], 1, function(z) na.omit(z)[1])
+oneFL_df_NP$loadedFL <- apply(oneFL_df_NP[,-1], 1, function(z) na.omit(z)[1])
 
-oneFL_df_NoPN$loadedFL <- as.numeric(oneFL_df_NoPN$loadedFL)
+oneFL_df_NP$loadedFL <- as.numeric(oneFL_df_NP$loadedFL)
 
-# green list, items that loaded >=.4 on one factor, no cross-loadings ====== GREEN 1 START
+# items that loaded >=.4 & <.75 on one factor ============================== YELLOW 1 START
 
-oneFL_grp4_NoPN <- which(abs(oneFL_df_NoPN$loadedFL)>= .40)
+oneFL_inrange_NP <- which(abs(oneFL_df_NP$loadedFL)>= .40 & abs(oneFL_df_NP$loadedFL) < .75)
 
-oneFL_grp4_NoPN <- oneFL_df_NoPN[oneFL_grp4_NoPN, ]
+oneFL_inrange_NP <- oneFL_df_NP[oneFL_inrange_NP, ]
 
-oneFL_grp4_items_NoPN <- oneFL_grp4_NoPN$Item_No 
-
-# ========================================================================== GREEN 1 END
-
-# yellow list, items that loaded on one factor only but with <.4 loading === YELLOW 1 START
-
-oneFL_lst4_NoPN <- which(abs(oneFL_df_NoPN$loadedFL) < .40)
-
-oneFL_lst4_NoPN <- oneFL_df_NoPN[oneFL_lst4_NoPN, ]
-
-oneFL_lst4_items_NoPN <- oneFL_lst4_NoPN$Item_No
+oneFL_inrange_items_NP <- oneFL_inrange_NP$Item_No 
 
 # ========================================================================== YELLOW 1 END
 
+# orange list, items that loaded on one factor only but with <.4 or >=.75 loading == ORANGE 1 START
+
+oneFL_notir_NP <- which(abs(oneFL_df_NP$loadedFL) < .40 | abs(oneFL_df_NP$loadedFL) >= .75)
+
+oneFL_notir_NP <- oneFL_df_NP[oneFL_notir_NP, ]
+
+oneFL_notir_items_NP <- oneFL_notir_NP$Item_No
+
+# ================================================================================== ORANGE 1 END
+
 ### TWO FACTOR LOADINGS 
 
-twoFL_NoPN <- which(FL_count_NoPN == 2) # subsetting for items that loaded on one factor only
+twoFL_NP <- which(FL_count_NP == 2) # subsetting for items that loaded on two factors
 
-twoFL_df_NoPN <- Combined_Overall_NoPN[twoFL_NoPN, ]
+twoFL_df_NP <- Combined_Overall_NoPN[twoFL_NP, ]
+
+tbl2_NP <- as.data.frame(table(twoFL_df_NP$LoadedFactor))
+
+knitr::kable(tbl2_NP)
 ```
 
 ```{r}
-knitr::kable(Combined_Overall_NoPN, booktabs = TRUE) %>%
-  row_spec(zeroFL_NoPN, bold = T, color = "white", background = "lightsalmon") %>%
-  kable_styling(position="center") %>%
-  scroll_box(height = "300px") 
+twoFL_notsplit_NP <- with(twoFL_df_NP, which(LoadedFactor %in% c("MTurk_F4_PosAtt, SMU_F6_PosAtt", "MTurk_F6_Flo, SMU_F8_Flo")))
+
+twoFL_notsplit_NP <- twoFL_df_NP[twoFL_notsplit_NP, ]
+
+twoFL_notsplit_NoNum_NP <- twoFL_notsplit_NP[,-c(1, 16)] # removing non-numerical columns
+
+twoFL_notsplit_NP$firstloading <- apply(twoFL_notsplit_NoNum_NP, 1, function(z) na.omit(z)[1]) # extract first loading 
+
+twoFL_notsplit_NP$firstloading <- as.numeric(twoFL_notsplit_NP$firstloading)
+
+twoFL_notsplit_NP$secondloading <- apply(twoFL_notsplit_NoNum_NP, 1, function(z) na.omit(z)[2]) # extract second loading 
+
+twoFL_notsplit_NP$secondloading <- as.numeric(twoFL_notsplit_NP$secondloading)
+
+twoFL_notsplit_NP$firstFL_inrange <- ifelse(abs(twoFL_notsplit_NP$firstloading) >= .40 & abs(twoFL_notsplit_NP$firstloading) < .75, TRUE, FALSE)
+
+twoFL_notsplit_NP$secondFL_inrange <- ifelse(abs(twoFL_notsplit_NP$secondloading) >= .40 & abs(twoFL_notsplit_NP$secondloading) < .75, TRUE, FALSE)
+
+twoFL_notsplit_NP$category <- ifelse(twoFL_notsplit_NP$firstFL_inrange == TRUE & twoFL_notsplit_NP$secondFL_inrange == TRUE, "GREEN", ifelse(twoFL_notsplit_NP$firstFL_inrange == TRUE & twoFL_notsplit_NP$secondFL_inrange == FALSE, "YELLOW", ifelse(twoFL_notsplit_NP$firstFL_inrange == TRUE & twoFL_notsplit_NP$secondFL_inrange == FALSE, "YELLOW", "ORANGE")))
+
+# ========================================================================= GREEN 1 START
+
+twoFL_NS_GREEN_NP <- with(twoFL_notsplit_NP, which(category %in% "GREEN"))
+
+twoFL_NS_GREEN_NP <- twoFL_notsplit_NP[twoFL_NS_GREEN_NP, ]
+
+twoFL_NS_GREENitems_NP <- twoFL_NS_GREEN_NP$Item_No  
+
+# ========================================================================= GREEN 1 END 
+
+# ========================================================================= YELLOW 2 START 
+
+twoFL_NS_YELLOW_NP <- with(twoFL_notsplit_NP, which(category %in% "YELLOW"))
+
+twoFL_NS_YELLOW_NP <- twoFL_notsplit_NP[twoFL_NS_YELLOW_NP, ]
+
+twoFL_NS_YELLOWitems_NP <- twoFL_NS_YELLOW_NP$Item_No  
+
+# ========================================================================= YELLOW 2 END 
+
+# ========================================================================= ORANGE 2 START 
+
+twoFL_NS_ORANGE_NP <- with(twoFL_notsplit_NP, which(category %in% "ORANGE"))
+
+twoFL_NS_ORANGE_NP <- twoFL_notsplit_NP[twoFL_NS_ORANGE_NP, ]
+
+twoFL_NS_ORANGEitems_NP <- twoFL_NS_ORANGE_NP$Item_No  
+
+# ========================================================================= ORANGE 2 END 
+
+twoFL_split_NP <- with(twoFL_df_NP, which(LoadedFactor %in% c("Com_F4_NegPhys, Com_F5_Prog", "Com_F4_NegPhys, MTurk_F3_Cog", "Com_F4_NegPhys, MTurk_F5_Gar", "Com_F4_NegPhys, SMU_F4_NegAtt", "Com_F4_NegPhys, SMU_F7_CompSoc", "Com_F4_NegPhys, SMU_F8_Flo", "Com_F5_Prog, MTurk_F3_Cog", "Com_F6_PosAtt, SMU_F7_CompSoc", "Com_F7_Soc, MTurk_F3_Cog", "Com_F7_Soc, MTurk_F4_PosAtt", "Com_F7_Soc, SMU_F8_Flo", "MTurk_F3_Cog, MTurk_F4_PosAtt", "MTurk_F3_Cog, MTurk_F6_Flo", "MTurk_F3_Cog, SMU_F8_Flo", "MTurk_F4_PosAtt, SMU_F8_Flo", "MTurk_F5_Gar, SMU_F4_NegAtt", "MTurk_F5_Gar, SMU_F8_Flo", "SMU_F7_CompSoc, SMU_F8_Flo")))
+
+twoFL_split_NP <- twoFL_df_NP[twoFL_split_NP, ]
+
+twoFL_split_NoNum_NP <- twoFL_split_NP[,-c(1, 16)] # removing non-numerical columns
+
+twoFL_split_NP$firstloading <- apply(twoFL_split_NoNum_NP, 1, function(z) na.omit(z)[1]) # extract first loading 
+
+twoFL_split_NP$firstloading <- as.numeric(twoFL_split_NP$firstloading)
+
+twoFL_split_NP$secondloading <- apply(twoFL_split_NoNum_NP, 1, function(z) na.omit(z)[2]) # extract second loading 
+
+twoFL_split_NP$secondloading <- as.numeric(twoFL_split_NP$secondloading)
+
+twoFL_split_NP$firstFL_inrange <- ifelse(abs(twoFL_split_NP$firstloading) >= .40 & abs(twoFL_split_NP$firstloading) < .75, TRUE, FALSE)
+
+twoFL_split_NP$firstFL_loadingL030 <- ifelse(abs(twoFL_split_NP$firstloading) < .30, TRUE, FALSE)
+
+twoFL_split_NP$secondFL_inrange <- ifelse(abs(twoFL_split_NP$secondloading) >= .40 & abs(twoFL_split_NP$secondloading) < .75, TRUE, FALSE)
+
+twoFL_split_NP$secondFL_loadingL030 <- ifelse(abs(twoFL_split_NP$secondloading) < .30, TRUE, FALSE)
+
+twoFL_split_NP$category <- ifelse(twoFL_split_NP$firstFL_inrange == TRUE & twoFL_split_NP$secondFL_inrange == FALSE & twoFL_split_NP$firstFL_loadingL030 == FALSE & twoFL_split_NP$secondFL_loadingL030 == TRUE, "YELLOW", ifelse(twoFL_split_NP$firstFL_inrange == FALSE & twoFL_split_NP$secondFL_inrange == TRUE & twoFL_split_NP$firstFL_loadingL030 == TRUE & twoFL_split_NP$secondFL_loadingL030 == FALSE, "YELLOW", ifelse( twoFL_split_NP$firstFL_inrange == TRUE & twoFL_split_NP$secondFL_inrange == TRUE, "RED", "ORANGE")))
+
+# ========================================================================= YELLOW 3 START
+
+twoFL_SP_YELLOW_NP <- with(twoFL_split_NP, which(category %in% "YELLOW"))
+
+twoFL_SP_YELLOW_NP <- twoFL_split_NP[twoFL_SP_YELLOW_NP, ]
+
+twoFL_SP_YELLOWitems_NP <- twoFL_SP_YELLOW_NP$Item_No  
+
+# ========================================================================= YELLOW 3 END   
+
+# ========================================================================= ORANGE 3 START
+
+twoFL_SP_ORANGE_NP <- with(twoFL_split_NP, which(category %in% "ORANGE"))
+
+twoFL_SP_ORANGE_NP <- twoFL_split_NP[twoFL_SP_ORANGE_NP, ]
+
+twoFL_SP_ORANGEitems_NP <- twoFL_SP_ORANGE_NP$Item_No  
+
+# ========================================================================= ORANGE 3 END 
+
+# ========================================================================= RED 2 START
+
+twoFL_SP_RED_NP <- with(twoFL_split_NP, which(category %in% "RED"))
+
+twoFL_SP_RED_NP <- twoFL_split_NP[twoFL_SP_RED_NP, ]
+
+twoFL_SP_REDitems_NP <- twoFL_SP_RED_NP$Item_No  
+
+# ========================================================================= RED 2 END 
+
+### THREEE FACTOR LOADINGS 
+
+threeFL_NP <- which(FL_count_NP == 3) # subsetting for items that loaded on three factors
+
+threeFL_df_NP <- Combined_Overall_NoPN[threeFL_NP, ]
+
+tbl3_NP <- as.data.frame(table(threeFL_df_NP$LoadedFactor))
+
+knitr::kable(tbl3_NP)
 ```
 
 ```{r}
-knitr::kable(Combined_Overall_NoPN, booktabs = TRUE) %>%
-  row_spec(oneFL_lst4_items_NoPN, bold=T, color="darkgray", background = "yellow") %>%
-  kable_styling(position="center") %>%
-  scroll_box(height = "300px") 
+threeFL_NoNum_NP <- threeFL_df_NP[,-c(1, 16)] # removing non-numerical columns
+
+threeFL_df_NP$firstloading <- apply(threeFL_NoNum_NP, 1, function(z) na.omit(z)[1]) # extract first loading 
+
+threeFL_df_NP$firstloading <- as.numeric(threeFL_df_NP$firstloading) 
+
+threeFL_df_NP$secondloading <- apply(threeFL_NoNum_NP, 1, function(z) na.omit(z)[2]) # extract second loading 
+
+threeFL_df_NP$secondloading <- as.numeric(threeFL_df_NP$secondloading)
+
+threeFL_df_NP$thirdloading <- apply(threeFL_NoNum_NP, 1, function(z) na.omit(z)[3]) # extract third loading
+
+threeFL_df_NP$thirdloading <- as.numeric(threeFL_df_NP$thirdloading)
+
+threeFL_df_NP$firstFL_inrange <- ifelse(abs(threeFL_df_NP$firstloading) >= .40 & abs(threeFL_df_NP$firstloading) < .75, TRUE, FALSE)
+
+threeFL_df_NP$secondFL_inrange <- ifelse(abs(threeFL_df_NP$secondloading) >= .40 & abs(threeFL_df_NP$secondloading) < .75, TRUE, FALSE)
+
+threeFL_df_NP$thirdFL_inrange<- ifelse(abs(threeFL_df_NP$thirdloading) >= .40 & abs(threeFL_df_NP$thirdloading) < .75, TRUE, FALSE)
+
+threeFL_df_loadings_NP <- threeFL_df_NP[,16:22]
 ```
 
 ```{r}
-knitr::kable(Combined_Overall_NoPN, booktabs = TRUE) %>%
-  row_spec(oneFL_grp4_items_NoPN, bold = T, color = "white", background = "green") %>%
-  kable_styling(position="center") %>%
-  scroll_box(height = "300px") 
+threeFL_tbl_row1_NP <- as.data.frame(threeFL_df_loadings_NP[1,])
+
+knitr::kable(threeFL_tbl_row1_NP) # red, indicator for different subscales in different samples & in range 
 ```
 
+```{r}
+threeFL_tbl_row2_NP <- as.data.frame(threeFL_df_loadings_NP[2,])
 
+knitr::kable(threeFL_tbl_row2_NP) # red, indicator for different subscales in different samples & in range 
+```
 
+```{r}
+threeFL_tbl_row3_NP <- as.data.frame(threeFL_df_loadings_NP[3,])
 
+knitr::kable(threeFL_tbl_row3_NP) # orange, indicator for different subscales in different samples but not in range 
+```
 
+```{r}
+threeFL_tbl_row4_NP <- as.data.frame(threeFL_df_loadings_NP[4,])
 
+knitr::kable(threeFL_tbl_row4_NP) # yellow, high FL (but >.75) for the same factor across samples
+```
 
+```{r}
+threeFL_tbl_row5_NP <- as.data.frame(threeFL_df_loadings_NP[5,])
 
+knitr::kable(threeFL_tbl_row5_NP) # green, FL in range for the same factor across samples 
+```
 
+```{r}
+threeFL_tbl_row6_NP <- as.data.frame(threeFL_df_loadings_NP[6,])
 
+knitr::kable(threeFL_tbl_row6_NP) # orange, loaded in different factors across samples but not all in range 
+```
+ 
+```{r}
+threeFL_tbl_row7_NP <- as.data.frame(threeFL_df_loadings_NP[7,])
 
+knitr::kable(threeFL_tbl_row7_NP) # green, FL in range for the same factor across samples 
+```
 
+```{r}
+threeFL_tbl_row8_NP <- as.data.frame(threeFL_df_loadings_NP[8,])
 
+knitr::kable(threeFL_tbl_row8_NP) # yellow, FL in range for the same factor across mturk and smu subscale but also .333 cross-loading for different factor in com sample 
+```
 
+```{r}
+threeFL_tbl_row9_NP <- as.data.frame(threeFL_df_loadings_NP[9,])
 
+knitr::kable(threeFL_tbl_row9_NP) # orange, weak loadings for different factors across samples 
+```
 
+```{r}
+threeFL_tbl_row10_NP <- as.data.frame(threeFL_df_loadings_NP[10,])
+
+knitr::kable(threeFL_tbl_row10_NP) # orange, weak loadings for different factors across samples 
+```
+
+```{r}
+threeFL_tbl_row11_NP <- as.data.frame(threeFL_df_loadings_NP[11,])
+
+knitr::kable(threeFL_tbl_row11_NP) # yellow, FL in range for one factor in mturk sample, cross-loadings for other factors <.30 in other samples
+```
+
+```{r}
+threeFL_tbl_row12_NP <- as.data.frame(threeFL_df_loadings_NP[12,])
+
+knitr::kable(threeFL_tbl_row12_NP) # red, indicator for different subscales in different samples & in range 
+```
+
+```{r}
+threeFL_tbl_row13_NP <- as.data.frame(threeFL_df_loadings_NP[13,])
+
+knitr::kable(threeFL_tbl_row13_NP) # yellow, indicator for same factor across different samples and in range (but with one FL >.75)
+```
+
+```{r}
+threeFL_tbl_row14_NP <- as.data.frame(threeFL_df_loadings_NP[14,])
+
+knitr::kable(threeFL_tbl_row14_NP) # green, FL in range for the same factor across samples 
+```
+
+```{r}
+threeFL_tbl_row15_NP <- as.data.frame(threeFL_df_loadings_NP[15,])
+
+knitr::kable(threeFL_tbl_row15_NP) # green, FL in range for the same factor across samples 
+```
+
+```{r}
+threeFL_tbl_row16_NP <- as.data.frame(threeFL_df_loadings_NP[16,])
+
+knitr::kable(threeFL_tbl_row16_NP) # green, FL in range for the same factor across samples 
+```
+
+```{r}
+threeFL_tbl_row17_NP <- as.data.frame(threeFL_df_loadings_NP[17,])
+
+knitr::kable(threeFL_tbl_row17_NP) # green, FL in range for the same factor across samples 
+```
+
+```{r}
+threeFL_tbl_row18_NP <- as.data.frame(threeFL_df_loadings_NP[18,])
+
+knitr::kable(threeFL_tbl_row18_NP) # yellow, indicator for same factor across different samples and in range (but with one FL < .40)
+```
+
+```{r}
+threeFL_tbl_row19_NP <- as.data.frame(threeFL_df_loadings_NP[19,])
+
+knitr::kable(threeFL_tbl_row19_NP) # yellow, FL in range for the same factor across mturk and smu subscale but also .256 cross-loading for different factor in com sample 
+```
+
+```{r}
+threeFL_tbl_row20_NP <- as.data.frame(threeFL_df_loadings_NP[20,])
+
+knitr::kable(threeFL_tbl_row20_NP) # yellow, indicator for same factor across different samples and in range (but with one FL < .40)
+```
+
+```{r}
+threeFL_tbl_row21_NP <- as.data.frame(threeFL_df_loadings_NP[21,])
+
+knitr::kable(threeFL_tbl_row21_NP) # orange, weak loadings for different factors across samples
+```
+
+```{r}
+threeFL_tbl_row22_NP <- as.data.frame(threeFL_df_loadings_NP[22,])
+
+knitr::kable(threeFL_tbl_row22_NP) # green, FL in range for the same factor across samples 
+```
+
+```{r}
+threeFL_tbl_row23_NP <- as.data.frame(threeFL_df_loadings_NP[23,])
+
+knitr::kable(threeFL_tbl_row23_NP) # green, FL in range for the same factor across samples 
+```
+
+```{r}
+threeFL_tbl_row24_NP <- as.data.frame(threeFL_df_loadings_NP[24,])
+
+knitr::kable(threeFL_tbl_row24_NP) # green, FL in range for the same factor across samples 
+```
+
+```{r}
+threeFL_tbl_row25_NP <- as.data.frame(threeFL_df_loadings_NP[25,])
+
+knitr::kable(threeFL_tbl_row25_NP) # red, indicator for different subscales in different samples & in range 
+```
+
+```{r}
+threeFL_tbl_row26_NP <- as.data.frame(threeFL_df_loadings_NP[26,])
+
+knitr::kable(threeFL_tbl_row26_NP) # red, indicator for different subscales in different samples & in range 
+```
+
+```{r}
+threeFL_tbl_row27_NP <- as.data.frame(threeFL_df_loadings_NP[27,])
+
+knitr::kable(threeFL_tbl_row27_NP) # green, FL in range for the same factor across samples 
+```
+
+```{r}
+threeFL_tbl_row28_NP <- as.data.frame(threeFL_df_loadings_NP[28,])
+
+knitr::kable(threeFL_tbl_row28_NP) # green, FL in range for the same factor across samples 
+```
+
+```{r}
+threeFL_tbl_row29_NP <- as.data.frame(threeFL_df_loadings_NP[29,])
+
+knitr::kable(threeFL_tbl_row29_NP) # red, indicator for different subscales in different samples & in range 
+```
+
+```{r}
+threeFL_tbl_row30_NP <- as.data.frame(threeFL_df_loadings_NP[30,])
+
+knitr::kable(threeFL_tbl_row30_NP) # orange, weak loadings for different factors across samples
+```
+
+```{r}
+threeFL_tbl_row31_NP <- as.data.frame(threeFL_df_loadings_NP[31,])
+
+knitr::kable(threeFL_tbl_row31_NP) # orange, loaded in different factors across samples but not all in range 
+```
+
+```{r}
+threeFL_tbl_row32_NP <- as.data.frame(threeFL_df_loadings_NP[32,])
+
+knitr::kable(threeFL_tbl_row32_NP) # yellow, indicator for same factor across different samples and in range (but with two FLs < .40)
+```
+
+```{r}
+threeFL_tbl_row33_NP <- as.data.frame(threeFL_df_loadings_NP[33,])
+
+knitr::kable(threeFL_tbl_row33_NP) # green, FL in range for the same factor across samples 
+```
+
+```{r}
+threeFL_tbl_row34_NP <- as.data.frame(threeFL_df_loadings_NP[34,])
+
+knitr::kable(threeFL_tbl_row34_NP) # green, FL in range for the same factor across samples 
+```
+
+```{r}
+threeFL_tbl_row35_NP <- as.data.frame(threeFL_df_loadings_NP[35,])
+
+knitr::kable(threeFL_tbl_row35_NP) # yellow, FL in range for the same factor across mturk and smu subscale but also .252 cross-loading for different factor in com sample 
+```
+
+```{r}
+threeFL_tbl_row36_NP <- as.data.frame(threeFL_df_loadings_NP[36,])
+
+knitr::kable(threeFL_tbl_row36_NP) # orange, weak loadings for different factors across samples
+```
+
+```{r}
+threeFL_tbl_row37_NP <- as.data.frame(threeFL_df_loadings_NP[37,])
+
+knitr::kable(threeFL_tbl_row37_NP) # red, indicator for different subscales in different samples & in range 
+```
+
+```{r}
+threeFL_tbl_row38_NP <- as.data.frame(threeFL_df_loadings_NP[38,])
+
+knitr::kable(threeFL_tbl_row38_NP) # yellow, indicator for same factor across different samples and in range (but with two FLs < .40)
+```
+
+```{r}
+threeFL_tbl_row39_NP <- as.data.frame(threeFL_df_loadings_NP[39,])
+
+knitr::kable(threeFL_tbl_row39_NP) # green, FL in range for the same factor across samples 
+```
+
+```{r}
+threeFL_tbl_row40_NP <- as.data.frame(threeFL_df_loadings_NP[40,])
+
+knitr::kable(threeFL_tbl_row40_NP) # orange, weak loadings for different factors across samples
+```
+
+```{r}
+threeFL_tbl_row41_NP <- as.data.frame(threeFL_df_loadings_NP[41,])
+
+knitr::kable(threeFL_tbl_row41_NP) # orange, weak loadings for different factors across samples
+```
+
+```{r}
+threeFL_tbl_row42_NP <- as.data.frame(threeFL_df_loadings_NP[42,])
+
+knitr::kable(threeFL_tbl_row42_NP) # yellow, indicator for same factor across different samples and in range (but with one FL < .40)
+```
+
+```{r}
+threeFL_tbl_row43_NP <- as.data.frame(threeFL_df_loadings_NP[43,])
+
+knitr::kable(threeFL_tbl_row43_NP) # orange, weak loadings for different factors across samples
+```
+
+```{r}
+threeFL_tbl_row44_NP <- as.data.frame(threeFL_df_loadings_NP[44,])
+
+knitr::kable(threeFL_tbl_row44_NP) # green, FL in range for the same factor across samples 
+```
+
+```{r}
+threeFL_tbl_row45_NP <- as.data.frame(threeFL_df_loadings_NP[45,])
+
+knitr::kable(threeFL_tbl_row45_NP) # yellow, indicator for same factor across different samples and in range (but with one FL < .40)
+```
+
+```{r}
+threeFL_tbl_row46_NP <- as.data.frame(threeFL_df_loadings_NP[46,])
+
+knitr::kable(threeFL_tbl_row46_NP) # green, FL in range for the same factor across samples 
+```
+
+```{r}
+threeFL_tbl_row47_NP <- as.data.frame(threeFL_df_loadings_NP[47,])
+
+knitr::kable(threeFL_tbl_row47_NP) # orange, weak loadings for different factors across samples
+```
+
+```{r}
+threeFL_tbl_row48_NP <- as.data.frame(threeFL_df_loadings_NP[48,])
+
+knitr::kable(threeFL_tbl_row48_NP) # orange, weak loadings for different factors across samples
+```
+
+```{r}
+# =========================================================================== GREEN 3 START 
+
+threeFL_GREEN_NP <- threeFL_df_NP[c(5, 7, 14, 15, 16, 17, 22, 23, 24, 27, 28, 33, 34, 39, 44, 46),]
+
+threeFL_GREENitems_NP <- threeFL_GREEN_NP$Item_No
+
+# =========================================================================== GREEN 3 END 
+
+# =========================================================================== YELLOW 4 START 
+
+threeFL_YELLOW_NP <- threeFL_df_NP[c(4, 8, 11, 13, 18, 19, 20, 32, 35, 38, 42, 45),]
+
+threeFL_YELLOWitems_NP <- threeFL_YELLOW_NP$Item_No
+
+# =========================================================================== YELLOW 4 END 
+
+# =========================================================================== ORANGE 4 START 
+
+threeFL_ORANGE_NP <- threeFL_df_NP[c(3, 6, 9, 10, 20, 21, 30, 31, 36, 40, 41, 43, 47, 48),]
+
+threeFL_ORANGEitems_NP <- threeFL_ORANGE_NP$Item_No
+
+# =========================================================================== ORANGE 4 END 
+
+# =========================================================================== RED 3 START 
+
+threeFL_RED_NP <- threeFL_df_NP[c(1, 2, 12, 25, 26, 29, 37),]
+
+threeFL_REDitems_NP <- threeFL_RED_NP$Item_No
+
+# =========================================================================== RED 3 END 
+
+### FOUR FACTOR LOADINGS 
+
+fourFL_NP <- which(FL_count_NP == 4) # subsetting for items that loaded on four factors
+
+fourFL_df_NP <- Combined_Overall_NoPN[fourFL_NP, ]
+
+tbl4_NP <- as.data.frame(table(fourFL_df_NP$LoadedFactor))
+
+knitr::kable(tbl4_NP)
+```
+
+```{r}
+fourFL_NoNum_NP <- fourFL_df_NP[,-c(1, 16)] # removing non-numerical columns
+
+fourFL_df_NP$firstloading <- apply(fourFL_NoNum_NP, 1, function(z) na.omit(z)[1]) # extract first loading 
+
+fourFL_df_NP$firstloading <- as.numeric(fourFL_df_NP$firstloading) 
+
+fourFL_df_NP$secondloading <- apply(fourFL_NoNum_NP, 1, function(z) na.omit(z)[2]) # extract second loading 
+
+fourFL_df_NP$secondloading <- as.numeric(fourFL_df_NP$secondloading)
+
+fourFL_df_NP$thirdloading <- apply(fourFL_NoNum_NP, 1, function(z) na.omit(z)[3]) # extract third loading
+
+fourFL_df_NP$thirdloading <- as.numeric(fourFL_df_NP$thirdloading)
+
+fourFL_df_NP$fourthloading <- apply(fourFL_NoNum_NP, 1, function(z) na.omit(z)[4]) # extract fourth loading
+
+fourFL_df_NP$fourthloading <- as.numeric(fourFL_df_NP$fourthloading)
+
+fourFL_df_NP$firstFL_inrange <- ifelse(abs(fourFL_df_NP$firstloading) >= .40 & abs(fourFL_df_NP$firstloading) < .75, TRUE, FALSE)
+
+fourFL_df_NP$secondFL_inrange <- ifelse(abs(fourFL_df_NP$secondloading) >= .40 & abs(fourFL_df_NP$secondloading) < .75, TRUE, FALSE)
+
+fourFL_df_NP$thirdFL_inrange<- ifelse(abs(fourFL_df_NP$thirdloading) >= .40 & abs(fourFL_df_NP$thirdloading) < .75, TRUE, FALSE)
+
+fourFL_df_NP$fourthFL_inrange<- ifelse(abs(fourFL_df_NP$fourthloading) >= .40 & abs(fourFL_df_NP$fourthloading) < .75, TRUE, FALSE)
+
+fourFL_df_loadings_NP <- fourFL_df_NP[,16:24]
+```
+
+```{r}
+fourFL_tbl_row1_NP <- as.data.frame(fourFL_df_loadings_NP[1,])
+
+knitr::kable(fourFL_tbl_row1_NP) # red, indicator for different subscales in different samples & in range 
+```
+
+```{r}
+fourFL_tbl_row2_NP <- as.data.frame(fourFL_df_loadings_NP[2,])
+
+knitr::kable(fourFL_tbl_row2_NP) # orange, weak loadings for different subscales in different samples 
+```
+
+```{r}
+fourFL_tbl_row3_NP <- as.data.frame(fourFL_df_loadings_NP[3,])
+
+knitr::kable(fourFL_tbl_row3_NP) # yellow, FL in range for the same factor across all 3 subscales but also .337 cross-loading for different factor in com sample 
+```
+
+```{r}
+fourFL_tbl_row4_NP <- as.data.frame(fourFL_df_loadings_NP[4,])
+
+knitr::kable(fourFL_tbl_row4_NP) # orange, weak loadings for different subscales in different samples 
+```
+
+```{r}
+fourFL_tbl_row5_NP <- as.data.frame(fourFL_df_loadings_NP[5,])
+
+knitr::kable(fourFL_tbl_row5_NP) # orange, weak loadings for different subscales in different samples 
+```
+
+```{r}
+fourFL_tbl_row6_NP <- as.data.frame(fourFL_df_loadings_NP[6,])
+
+knitr::kable(fourFL_tbl_row6_NP) # red, indicator for different subscales in different samples & in range 
+```
+
+```{r}
+fourFL_tbl_row7_NP <- as.data.frame(fourFL_df_loadings_NP[7,])
+
+knitr::kable(fourFL_tbl_row7_NP) # red, indicator for different subscales in different samples & in range 
+```
+
+```{r}
+fourFL_tbl_row8_NP <- as.data.frame(fourFL_df_loadings_NP[8,])
+
+knitr::kable(fourFL_tbl_row8_NP) # yellow, FL in range for same factor across all 3 samples but has >.75 loading for the the smu sample & has a cross-loading of <.30 for a different factor in the com sample 
+```
+
+```{r}
+fourFL_tbl_row9_NP <- as.data.frame(fourFL_df_loadings_NP[9,])
+
+knitr::kable(fourFL_tbl_row9_NP) # orange, weak loadings for different subscales in different samples 
+```
+
+```{r}
+fourFL_tbl_row10_NP <- as.data.frame(fourFL_df_loadings_NP[10,])
+
+knitr::kable(fourFL_tbl_row10_NP) # green, FL in range for same factor across all 3 samples and has <.30 cross-loading  
+```
+
+```{r}
+fourFL_tbl_row11_NP <- as.data.frame(fourFL_df_loadings_NP[11,])
+
+knitr::kable(fourFL_tbl_row11_NP) # red, indicator for different subscales in different samples & in range 
+```
+
+```{r}
+fourFL_tbl_row12_NP <- as.data.frame(fourFL_df_loadings_NP[12,])
+
+knitr::kable(fourFL_tbl_row12_NP) # orange, weak loadings for different subscales in different samples 
+```
+
+```{r}
+fourFL_tbl_row13_NP <- as.data.frame(fourFL_df_loadings_NP[13,])
+
+knitr::kable(fourFL_tbl_row13_NP) # yellow, FL in range for same factor across all 3 samples but has >.75 loading for the the smu sample & has a cross-loading of <.30 for a different factor in the smu sample 
+```
+
+```{r}
+fourFL_tbl_row14_NP <- as.data.frame(fourFL_df_loadings_NP[14,])
+
+knitr::kable(fourFL_tbl_row14_NP) # orange, weak loadings for different subscales in different samples 
+```
+
+```{r}
+fourFL_tbl_row15_NP <- as.data.frame(fourFL_df_loadings_NP[15,])
+
+knitr::kable(fourFL_tbl_row15_NP) # red, indicator for different subscales in different samples & in range 
+```
+
+```{r}
+fourFL_tbl_row16_NP <- as.data.frame(fourFL_df_loadings_NP[16,])
+
+knitr::kable(fourFL_tbl_row16_NP) # red, indicator for different subscales in different samples & in range 
+```
+
+```{r}
+fourFL_tbl_row17_NP <- as.data.frame(fourFL_df_loadings_NP[17,])
+
+knitr::kable(fourFL_tbl_row17_NP) # red, indicator for different subscales in different samples & in range 
+```
+
+```{r}
+fourFL_tbl_row18_NP <- as.data.frame(fourFL_df_loadings_NP[18,])
+
+knitr::kable(fourFL_tbl_row18_NP) # red, indicator for different subscales in different samples & in range 
+```
+
+```{r}
+fourFL_tbl_row19_NP <- as.data.frame(fourFL_df_loadings_NP[19,])
+
+knitr::kable(fourFL_tbl_row19_NP) # green, FL in range for same factor across all 3 samples and has <.30 cross-loading  
+```
+
+```{r}
+# =========================================================================== GREEN 4 START 
+
+fourFL_GREEN_NP <- fourFL_df_NP[c(10, 19), ]
+
+fourFL_GREENitems_NP <- fourFL_GREEN_NP$Item_No
+
+# =========================================================================== GREEN 4 END
+
+# =========================================================================== YELLOW 5 START 
+
+fourFL_YELLOW_NP <- fourFL_df_NP[c(3, 8, 13, 19),]
+
+fourFL_YELLOWitems_NP <- fourFL_YELLOW_NP$Item_No
+
+# =========================================================================== YELLOW 5 END 
+
+# =========================================================================== ORANGE 5 START 
+
+fourFL_ORANGE_NP <- fourFL_df_NP[c(2, 4, 5, 9, 12, 14),]
+
+fourFL_ORANGEitems_NP <- fourFL_ORANGE_NP$Item_No
+
+# =========================================================================== ORANGE 5 END 
+
+# =========================================================================== RED 4 START 
+
+fourFL_RED_NP <- fourFL_df_NP[c(1, 6, 7, 11, 15, 16, 17, 18),]
+
+fourFL_REDitems_NP <- fourFL_RED_NP$Item_No
+
+# =========================================================================== RED 4 END 
+
+### FIVE FACTOR LOADINGS 
+
+fiveFL_NP <- which(FL_count_NP == 5) # subsetting for items that loaded on five factors
+
+fiveFL_df_NP <- Combined_Overall_NoPN[fiveFL_NP, ]
+
+tbl5_NP <- as.data.frame(table(fiveFL_df_NP$LoadedFactor))
+
+knitr::kable(tbl5_NP)
+```
+
+```{r}
+fiveFL_NoNum_NP <- fiveFL_df_NP[,-c(1, 16)] # removing non-numerical columns
+
+fiveFL_df_NP$firstloading <- apply(fiveFL_NoNum_NP, 1, function(z) na.omit(z)[1]) # extract first loading 
+
+fiveFL_df_NP$firstloading <- as.numeric(fiveFL_df_NP$firstloading) 
+
+fiveFL_df_NP$secondloading <- apply(fiveFL_NoNum_NP, 1, function(z) na.omit(z)[2]) # extract second loading 
+
+fiveFL_df_NP$secondloading <- as.numeric(fiveFL_df_NP$secondloading)
+
+fiveFL_df_NP$thirdloading <- apply(fiveFL_NoNum_NP, 1, function(z) na.omit(z)[3]) # extract third loading
+
+fiveFL_df_NP$thirdloading <- as.numeric(fiveFL_df_NP$thirdloading)
+
+fiveFL_df_NP$fourthloading <- apply(fiveFL_NoNum_NP, 1, function(z) na.omit(z)[4]) # extract fourth loading
+
+fiveFL_df_NP$fourthloading <- as.numeric(fiveFL_df_NP$fourthloading)
+
+fiveFL_df_NP$fifthloading <- apply(fiveFL_NoNum_NP, 1, function(z) na.omit(z)[5]) # extract fifth loading
+
+fiveFL_df_NP$fifthloading <- as.numeric(fiveFL_df_NP$fifthloading)
+
+fiveFL_df_NP$firstFL_inrange <- ifelse(abs(fiveFL_df_NP$firstloading) >= .40 & abs(fiveFL_df_NP$firstloading) < .75, TRUE, FALSE)
+
+fiveFL_df_NP$secondFL_inrange <- ifelse(abs(fiveFL_df_NP$secondloading) >= .40 & abs(fiveFL_df_NP$secondloading) < .75, TRUE, FALSE)
+
+fiveFL_df_NP$thirdFL_inrange<- ifelse(abs(fiveFL_df_NP$thirdloading) >= .40 & abs(fiveFL_df_NP$thirdloading) < .75, TRUE, FALSE)
+
+fiveFL_df_NP$fourthFL_inrange<- ifelse(abs(fiveFL_df_NP$fourthloading) >= .40 & abs(fiveFL_df_NP$fourthloading) < .75, TRUE, FALSE)
+
+fiveFL_df_NP$fifthFL_inrange<- ifelse(abs(fiveFL_df_NP$fifthloading) >= .40 & abs(fiveFL_df_NP$fifthloading) < .75, TRUE, FALSE)
+
+fiveFL_df_loadings_NP <- fiveFL_df_NP[,16:26]
+```
+
+```{r}
+fiveFL_tbl_row1_NP <- as.data.frame(fiveFL_df_loadings_NP[1,])
+
+knitr::kable(fiveFL_tbl_row1_NP) # orange, weak loadings for different subscales in different samples 
+```
+
+```{r}
+fiveFL_tbl_row2_NP <- as.data.frame(fiveFL_df_loadings_NP[2,])
+
+knitr::kable(fiveFL_tbl_row2_NP) # orange, weak loadings for different subscales in different samples 
+```
+
+```{r}
+fiveFL_tbl_row3_NP <- as.data.frame(fiveFL_df_loadings_NP[3,])
+
+knitr::kable(fiveFL_tbl_row3_NP) # red, indicator for different subscales in different samples & in range 
+```
+
+```{r}
+fiveFL_tbl_row4_NP <- as.data.frame(fiveFL_df_loadings_NP[4,])
+
+knitr::kable(fiveFL_tbl_row4_NP) # red, indicator for different subscales in different samples & in range 
+```
+
+```{r}
+fiveFL_tbl_row5_NP <- as.data.frame(fiveFL_df_loadings_NP[5,])
+
+knitr::kable(fiveFL_tbl_row5_NP) # red, indicator for different subscales in different samples & in range 
+```
+
+```{r}
+fiveFL_tbl_row6_NP <- as.data.frame(fiveFL_df_loadings_NP[6,])
+
+knitr::kable(fiveFL_tbl_row6_NP) # red, indicator for different subscales in different samples & in range 
+```
+
+```{r}
+# =========================================================================== ORANGE 6 START 
+
+fiveFL_ORANGE_NP <- fiveFL_df_NP[c(1, 2),]
+
+fiveFL_ORANGEitems_NP <- fiveFL_ORANGE_NP$Item_No
+
+# =========================================================================== ORANGE 6 END 
+
+# =========================================================================== RED 5 START 
+
+fiveFL_RED_NP <- fiveFL_df_NP[c(3, 4, 5, 6),]
+
+fiveFL_REDitems_NP <- fiveFL_RED_NP$Item_No
+
+# =========================================================================== RED 5 END 
+
+### SIX FACTOR LOADINGS 
+
+sixFL_NP <- which(FL_count_NP == 6) # subsetting for items that loaded on six factors
+
+sixFL_df_NP <- Combined_Overall_NoPN[sixFL_NP, ]
+
+tbl6_NP <- as.data.frame(table(sixFL_df_NP$LoadedFactor))
+
+knitr::kable(tbl6_NP)
+```
+
+```{r}
+sixFL_NoNum_NP <- sixFL_df_NP[,-c(1, 16)] # removing non-numerical columns
+
+sixFL_df_NP$firstloading <- apply(sixFL_NoNum_NP, 1, function(z) na.omit(z)[1]) # extract first loading 
+
+sixFL_df_NP$firstloading <- as.numeric(sixFL_df_NP$firstloading) 
+
+sixFL_df_NP$secondloading <- apply(sixFL_NoNum_NP, 1, function(z) na.omit(z)[2]) # extract second loading 
+
+sixFL_df_NP$secondloading <- as.numeric(sixFL_df_NP$secondloading)
+
+sixFL_df_NP$thirdloading <- apply(sixFL_NoNum_NP, 1, function(z) na.omit(z)[3]) # extract third loading
+
+sixFL_df_NP$thirdloading <- as.numeric(sixFL_df_NP$thirdloading)
+
+sixFL_df_NP$fourthloading <- apply(sixFL_NoNum_NP, 1, function(z) na.omit(z)[4]) # extract fourth loading
+
+sixFL_df_NP$fourthloading <- as.numeric(sixFL_df_NP$fourthloading)
+
+sixFL_df_NP$fifthloading <- apply(sixFL_NoNum_NP, 1, function(z) na.omit(z)[5]) # extract fifth loading
+
+sixFL_df_NP$fifthloading <- as.numeric(sixFL_df_NP$fifthloading)
+
+sixFL_df_NP$sixthloading <- apply(sixFL_NoNum_NP, 1, function(z) na.omit(z)[6]) # extract sixth loading
+
+sixFL_df_NP$sixthloading <- as.numeric(sixFL_df_NP$sixthloading)
+
+sixFL_df_NP$firstFL_inrange <- ifelse(abs(sixFL_df_NP$firstloading) >= .40 & abs(sixFL_df_NP$firstloading) < .75, TRUE, FALSE)
+
+sixFL_df_NP$secondFL_inrange <- ifelse(abs(sixFL_df_NP$secondloading) >= .40 & abs(sixFL_df_NP$secondloading) < .75, TRUE, FALSE)
+
+sixFL_df_NP$thirdFL_inrange<- ifelse(abs(sixFL_df_NP$thirdloading) >= .40 & abs(sixFL_df_NP$thirdloading) < .75, TRUE, FALSE)
+
+sixFL_df_NP$fourthFL_inrange<- ifelse(abs(sixFL_df_NP$fourthloading) >= .40 & abs(sixFL_df_NP$fourthloading) < .75, TRUE, FALSE)
+
+sixFL_df_NP$fifthFL_inrange<- ifelse(abs(sixFL_df_NP$fifthloading) >= .40 & abs(sixFL_df_NP$fifthloading) < .75, TRUE, FALSE)
+
+sixFL_df_NP$sixthFL_inrange<- ifelse(abs(sixFL_df_NP$sixthloading) >= .40 & abs(sixFL_df_NP$sixthloading) < .75, TRUE, FALSE)
+
+sixFL_df_loadings_NP <- sixFL_df_NP[,16:28]
+```
+
+```{r}
+sixFL_tbl_row1_NP <- as.data.frame(sixFL_df_loadings_NP[1,])
+
+knitr::kable(sixFL_tbl_row1_NP) # red, indicator for different subscales in different samples & in range 
+```
+
+```{r}
+sixFL_tbl_row2_NP <- as.data.frame(sixFL_df_loadings_NP[2,])
+
+knitr::kable(sixFL_tbl_row2_NP) # orange, indicator in range for same factor across all three samples but also has cross-loadings of .264, .251, and .343 for different factors 
+```
+
+```{r}
+sixFL_tbl_row3_NP <- as.data.frame(sixFL_df_loadings_NP[3,])
+
+knitr::kable(sixFL_tbl_row3_NP) # red, indicator for different subscales in different samples & in range 
+```
+
+```{r}
+# =========================================================================== ORANGE 7 START 
+
+sixFL_ORANGE_NP <- sixFL_df_NP[2,]
+
+sixFL_ORANGEitems_NP <- sixFL_ORANGE_NP$Item_No
+
+# =========================================================================== ORANGE 7 END 
+
+# =========================================================================== RED 6 START 
+
+sixFL_RED_NP <- sixFL_df_NP[c(1, 3),]
+
+sixFL_REDitems_NP <- sixFL_RED_NP$Item_No
+
+# =========================================================================== RED 6 END 
+
+### SEVEN FACTOR LOADINGS 
+
+sevenFL_NP <- which(FL_count_NP == 7) # subsetting for items that loaded on seven factors
+
+sevenFL_df_NP <- Combined_Overall_NoPN[sevenFL_NP, ]
+
+tbl7_NP <- as.data.frame(table(sevenFL_df_NP$LoadedFactor))
+
+knitr::kable(tbl7_NP)
+```
+
+```{r}
+sevenFL_NoNum_NP <- sevenFL_df_NP[,-c(1, 16)] # removing non-numerical columns
+
+sevenFL_df_NP$firstloading <- apply(sevenFL_NoNum_NP, 1, function(z) na.omit(z)[1]) # extract first loading 
+
+sevenFL_df_NP$firstloading <- as.numeric(sevenFL_df_NP$firstloading) 
+
+sevenFL_df_NP$secondloading <- apply(sevenFL_NoNum_NP, 1, function(z) na.omit(z)[2]) # extract second loading 
+
+sevenFL_df_NP$secondloading <- as.numeric(sevenFL_df_NP$secondloading)
+
+sevenFL_df_NP$thirdloading <- apply(sevenFL_NoNum_NP, 1, function(z) na.omit(z)[3]) # extract third loading
+
+sevenFL_df_NP$thirdloading <- as.numeric(sevenFL_df_NP$thirdloading)
+
+sevenFL_df_NP$fourthloading <- apply(sevenFL_NoNum_NP, 1, function(z) na.omit(z)[4]) # extract fourth loading
+
+sevenFL_df_NP$fourthloading <- as.numeric(sevenFL_df_NP$fourthloading)
+
+sevenFL_df_NP$fifthloading <- apply(sevenFL_NoNum_NP, 1, function(z) na.omit(z)[5]) # extract fifth loading
+
+sevenFL_df_NP$fifthloading <- as.numeric(sevenFL_df_NP$fifthloading)
+
+sevenFL_df_NP$sixthloading <- apply(sevenFL_NoNum_NP, 1, function(z) na.omit(z)[6]) # extract sixth loading
+
+sevenFL_df_NP$sixthloading <- as.numeric(sevenFL_df_NP$sixthloading)
+
+sevenFL_df_NP$seventhloading <- apply(sevenFL_NoNum_NP, 1, function(z) na.omit(z)[7]) # extract seventh loading
+
+sevenFL_df_NP$seventhloading <- as.numeric(sevenFL_df_NP$seventhloading)
+
+sevenFL_df_NP$firstFL_inrange <- ifelse(abs(sevenFL_df_NP$firstloading) >= .40 & abs(sevenFL_df_NP$firstloading) < .75, TRUE, FALSE)
+
+sevenFL_df_NP$secondFL_inrange <- ifelse(abs(sevenFL_df_NP$secondloading) >= .40 & abs(sevenFL_df_NP$secondloading) < .75, TRUE, FALSE)
+
+sevenFL_df_NP$thirdFL_inrange<- ifelse(abs(sevenFL_df_NP$thirdloading) >= .40 & abs(sevenFL_df_NP$thirdloading) < .75, TRUE, FALSE)
+
+sevenFL_df_NP$fourthFL_inrange<- ifelse(abs(sevenFL_df_NP$fourthloading) >= .40 & abs(sevenFL_df_NP$fourthloading) < .75, TRUE, FALSE)
+
+sevenFL_df_NP$fifthFL_inrange<- ifelse(abs(sevenFL_df_NP$fifthloading) >= .40 & abs(sevenFL_df_NP$fifthloading) < .75, TRUE, FALSE)
+
+sevenFL_df_NP$sixthFL_inrange<- ifelse(abs(sevenFL_df_NP$sixthloading) >= .40 & abs(sevenFL_df_NP$sixthloading) < .75, TRUE, FALSE)
+
+sevenFL_df_NP$seventhFL_inrange<- ifelse(abs(sevenFL_df_NP$seventhloading) >= .40 & abs(sevenFL_df_NP$seventhloading) < .75, TRUE, FALSE)
+
+sevenFL_df_loadings_NP <- sevenFL_df_NP[,16:30]
+```
+
+```{r}
+sevenFL_tbl_row1_NP <- as.data.frame(sevenFL_df_loadings_NP[1,])
+
+knitr::kable(sevenFL_tbl_row1_NP) # red, indicator for different subscales in different samples & in range 
+```
+
+```{r}
+sevenFL_tbl_row2_NP <- as.data.frame(sevenFL_df_loadings_NP[2,])
+
+knitr::kable(sevenFL_tbl_row2_NP) # red, indicator for different subscales in different samples & in range 
+```
+
+```{r}
+# =========================================================================== RED 7 START 
+
+sevenFL_RED_NP <- sevenFL_df_NP[c(1, 2),]
+
+sevenFL_REDitems_NP <- sevenFL_RED_NP$Item_No
+
+# =========================================================================== RED 7 END 
+
+### EIGHT FACTOR LOADINGS 
+
+eightFL_NP <- which(FL_count_NP == 8) # subsetting for items that loaded on eight factors
+
+eightFL_df_NP <- Combined_Overall_NoPN[eightFL_NP, ]
+
+tbl8_NP <- as.data.frame(table(eightFL_df_NP$LoadedFactor))
+
+knitr::kable(tbl8_NP)
+```
+
+```{r}
+eightFL_NoNum_NP <- eightFL_df_NP[,-c(1, 16)] # removing non-numerical columns
+
+eightFL_df_NP$firstloading <- apply(eightFL_NoNum_NP, 1, function(z) na.omit(z)[1]) # extract first loading 
+
+eightFL_df_NP$firstloading <- as.numeric(eightFL_df_NP$firstloading) 
+
+eightFL_df_NP$secondloading <- apply(eightFL_NoNum_NP, 1, function(z) na.omit(z)[2]) # extract second loading 
+
+eightFL_df_NP$secondloading <- as.numeric(eightFL_df_NP$secondloading)
+
+eightFL_df_NP$thirdloading <- apply(eightFL_NoNum_NP, 1, function(z) na.omit(z)[3]) # extract third loading
+
+eightFL_df_NP$thirdloading <- as.numeric(eightFL_df_NP$thirdloading)
+
+eightFL_df_NP$fourthloading <- apply(eightFL_NoNum_NP, 1, function(z) na.omit(z)[4]) # extract fourth loading
+
+eightFL_df_NP$fourthloading <- as.numeric(eightFL_df_NP$fourthloading)
+
+eightFL_df_NP$fifthloading <- apply(eightFL_NoNum_NP, 1, function(z) na.omit(z)[5]) # extract fifth loading
+
+eightFL_df_NP$fifthloading <- as.numeric(eightFL_df_NP$fifthloading)
+
+eightFL_df_NP$sixthloading <- apply(eightFL_NoNum_NP, 1, function(z) na.omit(z)[6]) # extract sixth loading
+
+eightFL_df_NP$sixthloading <- as.numeric(eightFL_df_NP$sixthloading)
+
+eightFL_df_NP$seventhloading <- apply(eightFL_NoNum_NP, 1, function(z) na.omit(z)[7]) # extract seventh loading
+
+eightFL_df_NP$seventhloading <- as.numeric(eightFL_df_NP$seventhloading)
+
+eightFL_df_NP$eighthloading <- apply(eightFL_NoNum_NP, 1, function(z) na.omit(z)[8]) # extract eighth loading
+
+eightFL_df_NP$eighthloading <- as.numeric(eightFL_df_NP$eighthloading)
+
+eightFL_df_NP$firstFL_inrange <- ifelse(abs(eightFL_df_NP$firstloading) >= .40 & abs(eightFL_df_NP$firstloading) < .75, TRUE, FALSE)
+
+eightFL_df_NP$secondFL_inrange <- ifelse(abs(eightFL_df_NP$secondloading) >= .40 & abs(eightFL_df_NP$secondloading) < .75, TRUE, FALSE)
+
+eightFL_df_NP$thirdFL_inrange<- ifelse(abs(eightFL_df_NP$thirdloading) >= .40 & abs(eightFL_df_NP$thirdloading) < .75, TRUE, FALSE)
+
+eightFL_df_NP$fourthFL_inrange<- ifelse(abs(eightFL_df_NP$fourthloading) >= .40 & abs(eightFL_df_NP$fourthloading) < .75, TRUE, FALSE)
+
+eightFL_df_NP$fifthFL_inrange<- ifelse(abs(eightFL_df_NP$fifthloading) >= .40 & abs(eightFL_df_NP$fifthloading) < .75, TRUE, FALSE)
+
+eightFL_df_NP$sixthFL_inrange<- ifelse(abs(eightFL_df_NP$sixthloading) >= .40 & abs(eightFL_df_NP$sixthloading) < .75, TRUE, FALSE)
+
+eightFL_df_NP$seventhFL_inrange<- ifelse(abs(eightFL_df_NP$seventhloading) >= .40 & abs(eightFL_df_NP$seventhloading) < .75, TRUE, FALSE)
+
+eightFL_df_NP$eighthFL_inrange <- ifelse(abs(eightFL_df_NP$eighthloading) >= .40 & abs(eightFL_df_NP$eighthloading) < .75, TRUE, FALSE)
+
+eightFL_df_loadings_NP <- eightFL_df_NP[,16:32]
+```
+
+```{r}
+eightFL_tbl_row1_NP <- as.data.frame(eightFL_df_loadings_NP[1,])
+
+knitr::kable(eightFL_tbl_row1_NP) # red, indicator for different subscales in different samples & in range 
+```
+
+```{r}
+# =========================================================================== RED 8 START 
+
+eightFL_RED_NP <- eightFL_df_NP[1,]
+
+eightFL_REDitems_NP <- eightFL_RED_NP$Item_No
+
+# =========================================================================== RED 8 END 
+```
+
+```{r}
+red_list_NP <- sort(c(zeroFL_NP, twoFL_SP_REDitems_NP, threeFL_REDitems_NP, fourFL_REDitems_NP, fiveFL_REDitems_NP, sixFL_REDitems_NP, sevenFL_REDitems_NP, eightFL_REDitems_NP))
+
+orange_list_NP <- sort(c(oneFL_notir_items_NP, twoFL_NS_ORANGEitems_NP, twoFL_SP_ORANGEitems_NP, threeFL_ORANGEitems_NP, fourFL_ORANGEitems_NP, fiveFL_ORANGEitems_NP, sixFL_ORANGEitems_NP))
+
+yellow_list_NP <- sort(c(oneFL_inrange_items_NP, twoFL_NS_YELLOWitems_NP, twoFL_SP_YELLOWitems_NP, threeFL_YELLOWitems_NP, fourFL_YELLOWitems_NP))
+
+green_list_NP <- sort(c(twoFL_NS_GREENitems_NP, threeFL_GREENitems_NP, fourFL_GREENitems_NP))
+
+``` 
+
+```{r}
+Combined_Overall_NoPN$category <- ifelse(Combined_Overall_NoPN$Item_No %in% red_list_NP, 1, ifelse(Combined_Overall_NoPN$Item_No %in% orange_list_NP, 2, ifelse(Combined_Overall_NoPN$Item_No %in% yellow_list_NP, 3, ifelse(Combined_Overall_NoPN$Item_No %in% green_list_NP, 4, 5))))
+
+Combined_Overall_NoPN$Item <- item_list$X1
+
+Combined_Overall_NoPN <- Combined_Overall_NoPN[ ,c(1, 18, 2:17)]
+
+knitr::kable(Combined_Overall_NoPN, booktabs = TRUE) %>%
+  column_spec(1:18, color = "black", background = spec_color2(Combined_Overall_NoPN$category, palette = my_backgrounds)) %>%
+  kable_styling(position="center") %>%
+  scroll_box(height = "300px")  
+```
+
+### Results Overview 
+
+```{r}
+knitr::kable(Combined_Overall_PN, booktabs = TRUE) %>%
+  column_spec(1:12, color = "black", background = spec_color2(Combined_Overall_PN$category, palette = my_backgrounds)) %>%
+  kable_styling(position="center") %>%
+  scroll_box(height = "300px")  
+```
+
+- Positive Valence Subscale
+<font color = 'green'>
+  + Item 11 (green): Most of the time, I feel a sense of achievement right after I do physical activity.
+  + Item 19 (green): In most cases, I feel healthier right after I do physical activity.
+  + Item 22 (green): I've experienced that consistent physical activity helps me manage my stress.
+  + Item 26 (green): When I am exercising regularly, I've noticed my health improves.
+  + Item 41 (green): I often feel good about myself after doing physical activity.
+  + Item 56 (green): I am more physically attractive when I exercise often.
+  + Item 58 (green): I recognize when my abilities improve during physical activity.
+  + Item 63 (green): During physical activity, I've noticed my body feels stronger.
+  + Item 83 (green): When I do physical activity regularly, I've found my weight is easier to control.
+  + Item 84 (green): I feel sexier when I workout frequently.
+  + Item 86 (green): When I workout consistently, I have noticed my performance during workouts improves.
+  + Item 113 (green): When I exercise consistently, I notice my self-esteem improves.
+  + Item 118 (green): I'm happy after physical activity.
+  + Item 139 (green): I've found that working out frequently makes it easier to do other physical things.
+  + Item 141 (green): I feel like I've achieved a lot when I maintain a physical activity routine.
+  + Item 142 (green): During my workouts, I've noticed when my skills have improved.
+  + Item 143 (green): When I am getting regular physical activity, I feel like I am the best version of me.
+  + Item 167 (green): When I'm doing regular physical activity, I experience fewer health problems.
+  + Item 169 (green): When I work out frequently, I have much greater respect for myself.
+  + Item 175 (green): I usually feel more physically fit after completing an exercise session.
+  + Item 191 (green): I feel in much better shape when I routinely workout.
+  + Item 193 (green): Working out regularly makes me feel more satisfied with myself.
+  + Item 203 (green): After I finish an exercise session, I frequently feel greater respect for myself.
+  + Item 206 (green): After physical activity, I often notice myself thinking that I have improved my physical(?)
+  + Item 209 (green): I really notice how much better I feel when I exercise consistently.
+  + Item 215 (green): When I maintain an exercise routine, I find I am more content with myself.
+  + Item 232 (green): When I workout consistently, I notice my physical strength improves a lot.
+  + Item 234 (green): I tend to notice when physical activity becomes easier for me.
+  + Item 236 (green): I usually feel a sense of pride after I do physical activity.
+  + Item 239 (green): I notice I feel more at ease around others when I keep an exercise routine.
+  + Item 241 (green): I have found my self-esteem improves right after I am physically active.
+  + Item 248 (green): I have noticed I feel a lot healthier when I engage in regular physical activity.
+  + Item 249 (green): When I workout frequently, I see my muscles become much more defined.
+  + Item 264 (green): I have a lot more physical endurance and stamina when I work out c(?)
+  + Item 266 (green): When I am exercising regularly, I notice I am much more confident in my exercise abilities.
+  + Item 280 (green): I frequently feel good after physical activity.
+  + Item 301 (green): In my experience, I am able to perform daily activities more easily when I exercise consistently.
+  + Item 305 (green): I feel great when I'm engaging in physical activity. 
+</font>
+<font color = 'gray'>
+  + Item 7 (yellow): During a workout, I get needed time to myself.
+  + Item 15 (yellow): After an exercise session, I feel more attractive.
+  + Item 28 (yellow): When I am working out on a regular basis, I often feel a sense of pride.
+  + Item 44 (yellow): I am usually comfortable with my appearance when I workout.
+  + Item 48 (yellow): Following each workout, I think about how I helped manage my weight.
+  + Item 51 (yellow): I have found that I'm less anxious when I workout consistently.
+  + Item 52 (yellow): My focus improves when I'm in a workout session. 
+  + Item 53 (yellow): After physical activity, my mind is clearer. 
+  + Item 54 (yellow): I've noticed regular physical activity keeps my mind sharp. 
+  + Item 55 (yellow):  When I exercise consistently, I've noticed my physical fitness improves.
+  + Item 76 (yellow): Following my exercise sessions, I often think about progress I've made toward my health
+  + Item 82 (yellow): My focus is better when I exercise frequently.
+  + Item 85 (yellow): I feel good about myself when I do regular physical activity.
+  + Item 89 (yellow): When I'm in a workout session, I am less tense.
+  + Item 90 (yellow): After I exercise, I feel calm. 
+  + Item 98 (yellow): After a workout, I usually feel like I accomplished a lot.
+  + Item 104 (yellow):Immediately after working out, I think about the positive effects on my health.
+  + Item 107 (yellow): When I exercise on a regular basis, I've found that I have more energy.
+  + Item 111 (yellow): When I exercise often, I get better sleep.
+  + Item 112 (yellow): When I get regular physical activity, I notice my body is more toned.
+  + Item 114 (yellow): During a workout, it's easy for me to tell when I am doing it well.
+  + Item 115 (yellow): When I workout consistently, I see myself as an "exerciser". 
+  + Item 116 (yellow): When I'm exercising, time flies. 
+  + Item 135 (yellow): When I am exercising regularly, I typically feel more calm.
+  + Item 136 (yellow): I find it easier to make important decisions during physical activity.
+  + Item 140 (yellow): My clothes fit better when I am consistently exercising.
+  + Item 151 (yellow): During a workout, I get a break from other people.
+  + Item 157 (yellow): I've noticed parts of my body look better after an exercise session.
+  + Item 163 (yellow): When I work out often, I've found my life is easier to deal with.
+  + Item 164 (yellow): During a workout session, good ideas often come to mind.
+  + Item 168 (yellow): When I am doing routine physical activity, I can see how much better my body looks.
+  + Item 173 (yellow): I feel I have accomplished a lot after I exercise.
+  + Item 177 (yellow): My doctor is less concerned about my health when I workout frequently.
+  + Item 179 (yellow): I feel much more confident about myself during my workouts.
+  + Item 180 (yellow): I am very proud of myself after I workout.
+  + Item 184 (yellow): When I'm done working out, I think about the progress I've made toward living. 
+  + Item 187 (yellow): When I do regular physical activity, I find daily activities are more enjoyable.
+  + Item 188 (yellow): I get better perspective on problems while I workout.
+  + Item 192 (yellow): Regular physical activity keeps me looking young.
+  + Item 196 (yellow): During exercise, I become less anxious.
+  + Item 197 (yellow): After I exercise, I feel at peace.
+  + Item 202 (yellow): While working out, I'm filled with a sense of pride.
+  + Item 210 (yellow): During physical activity, I come up with new solutions to things.
+  + Item 212 (yellow): I experience much less mental fatigue when I workout frequently.
+  + Item 213 (yellow): I've noticed that my body is a lot more flexible when I exercise regularly.
+  + Item 214 (yellow): When I exercise consistently, my skin looks better.
+  + Item 216 (yellow): When I am exercising regularly, I've noticed my exercise abilities get much better.
+  + Item 225 (yellow): During my workouts, I often think about how I am improving my physical fitness.
+  + Item 229 (yellow): My awareness is improved while I exercise.
+  + Item 238 (yellow): I normally feel strong when I finish my workouts.
+  + Item 259 (yellow): After a workout, I think about how I am delaying dementia.
+  + Item 263 (yellow): I've noticed my mental performance improves a lot when I workout regularly.
+  + Item 268 (yellow): Most of the time, finishing a workout leaves me feeling refreshed.
+  + Item 275 (yellow): I find I'm less forgetful after a workout session.
+  + Item 277 (yellow): Certain parts of my body look noticeably better when I exercise consistently.
+  + Item 294 (yellow): I have found I'm much less stressed after physical activity.
+  + Item 300 (yellow): While I workout, my body's flexibility improves a lot. 
+  + Item 304 (yellow): When I do physical activity regularly, my body functions significantly better.
+  + Item 306 (yellow): I often feel inspired after I exercise.
+  + Item 308 (yellow): I'm a lot less anxious after physical activity. 
+  + Item 310 (yellow): I am noticeably less irritable after I exercise. 
+  + Item 312 (yellow): I'm usually less tense after physical activity. 
+  </font>
+
+- Negative Valence Subscale
+<font color = 'green'>
+  + Item 40 (green): Sometimes I feel useless during exercise.
+  + Item 147 (green): My body feels tense during physical activity.
+  + Item 244 (green): When I'm exercising, I feel guilty that I'm not doing other things I should be doing.
+  + Item 245 (green): I find maintaining an exercise routine makes me annoyed.
+  + Item 288 (green): I sometimes get discouraged during physical activity.
+</font>
+<font color = 'gray'>
+  + Item 8 (yellow): I catch myself trying to outdo others during physical activity.
+  + Item 9 (yellow): I notice that other people seem to do better than me when I do my workout sessions.
+  + Item 10 (yellow): I feel unattractive when I'm doing physical activity.
+  + Item 13 (yellow): While I'm working out, I think about how bad I smell.
+  + Item 34 (yellow): I am physically uncomfortable during exercise.
+  + Item 37 (yellow): I find myself trying to meet others expectations during physical activity.
+  + Item 49 (yellow): I've noticed exercise takes too much time away from other activities.
+  + Item 62 (yellow): I feel emotionally drained when I finish a workout.
+  + Item 69 (yellow): I sometimes feel like a failure when I exercise.
+  + Item 102 (yellow): After a workout, I often notice I look like a mess.
+  + Item 134 (yellow): I am uncomfortable in my workout location.
+  + Item 153 (yellow): I feel awkward while I work out.
+  + Item 154 (yellow): I am critical of myself after finishing a workout.
+  + Item 161 (yellow): I've noticed that working out requires too much energy.
+  + Item 178 (yellow): I find myself hoping to outperform others during exercise sessions.
+  + Item 205 (yellow): I aggravate a health condition when I exercise.
+  + Item 207 (yellow): In my experience, planning/scheduling exercise is too much of a hassle.
+  + Item 218 (yellow): I hate exercise while I'm doing it.
+  + Item 220 (yellow): When I workout, I find it hard to do the right movements.
+  + Item 221 (yellow): I am sleepy after my workouts.
+  + Item 223 (yellow): I am embarrassed when I workout.
+  + Item 227 (yellow): I've noticed that exercise is inconvenient for me.
+  + Item 228 (yellow): Keeping an exercise routine stresses me out. 
+  + Item 237 (yellow): I find it difficult to keep up physically with others during exercise.
+  + Item 240 (yellow): I feel uncomfortable when I exercise around others.
+  + Item 251 (yellow): I sometimes feel sad while I exercise.
+  + Item 256 (yellow): During physical activity, I feel self-conscious.
+  + Item 257 (yellow): After I workout, I feel I didn't do it well enough. 
+  + Item 267 (yellow): I sometimes get frustrated during my workouts.
+  + Item 271 (yellow): After I exercise, I sometimes feel like I failed.
+  + Item 281 (yellow): While I exercise, I'm concerned about falling.
+  + Item 286 (yellow): My joints ache more when I exercise regularly.
+  + Item 290 (yellow): During a workout session, I think about the possibility of getting hurt.
+  + Item 292 (yellow): I've experienced more injuries when I workout consistently.
+  + Item 293 (yellow): At times, I am annoyed during exercise.
+  + Item 295 (yellow): While I'm exercising, my chest feels tight. 
+  + Item 297 (yellow): Being physically active on a regular basis makes my body sore. 
+  + Item 298 (yellow): I occasionally feel ashamed while exercising. 
+  + Item 302 (yellow): Working out is stressful while doing it. 
+  + Item 309 (yellow): After a workout, I occasionally feel disappointed. 
+  </font>
+
+```{r}
+knitr::kable(Combined_Overall_NoPN, booktabs = TRUE) %>%
+  column_spec(1:18, color = "black", background = spec_color2(Combined_Overall_NoPN$category, palette = my_backgrounds)) %>%
+  kable_styling(position="center") %>%
+  scroll_box(height = "300px")  
+```
+ 
+- Flow/Mindfulness Subscale 
+  <font color = 'green'>
+  + Item 31 (green): While I am doing physical activity, I find myself totally engaged in the moment.
+  + Item 170 (green): I find myself enjoying the challenge of my workouts.
+  + Item 217 (green): I find it easy to stay focused on my workouts while I'm doing them.
+  </font> 
+  <font color = 'gray'>
+  + Item 21 (yellow): I enjoy the setting(s) I exercise in.
+  + Item 50 (yellow): I usually find the location(s) where I workout (e.g., nature, gym, home) to be pleasant. 
+  + Item 61 (yellow): I feel energetic during a workout. 
+  + Item 78 (yellow): I like the atmosphere of where I exercise. 
+  + Item 162 (yellow):I really enjoy the surroundings I do physical activity in.
+  </font> 
+- Negative Appearance Subscale 
+  <font color = 'green'>
+  + Item 13 (green): While I'm working out, I think about how bad I smell. 
+  + Item 46 (green): After exercising, I notice how bad I smell. 
+  </font> 
+  <font color = 'gray'>
+  + Item 128 (yellow): I notice that I look sweaty during physical activity.
+  + Item 256 (yellow): During physical activity, I feel self-conscious.
+  + Item 298 (yellow): I occasionally feel ashamed while exercising.
+  </font> 
+- Positive Appearance Subscale 
+  <font color = 'green'>
+  + Item 15 (green): After an exercise session, I feel more attractive. 
+  + Item 65 (green): I spend time with my partner/spouse while I workout. 
+  + Item 71 (green): During physical activity, I notice how toned I look. 
+  + Item 73 (green): When I'm done working out, I notice how toned my body looks.
+  + Item 101 (green): I often think about how great I look after my workouts.
+  + Item 127 (green): I feel attractive when I'm exercising. 
+  + Item 129 (green): I frequently get compliments on my appearance after my workouts.
+  </font> 
+  <font color = 'gray'>
+  + Item 12 (yellow): During my workouts, I think about how good I look. 
+  + Item 42 (yellow): I like people checking me out when I exercise.
+  + Item 45 (yellow): After doing physical activity, I think about how sexy I look. 
+  + Item 99 (yellow): During a workout, I think about how sexy I look.
+  + Item 157 (yellow): I've noticed parts of my body look better after an exercise session.
+  + Item 181 (yellow): I think I look amazing while I workout.
+  + Item 282 (yellow): After doing physical activity, I notice an immediate improvement in my muscle tone.
+  </font> 
+- Progress/Improvement Subscale
+  <font color = 'green'>
+  + Item 18 (green): During physical activity, I often find myself thinking about how it improves my health.
+  + Item 47 (green): During a workout session, I often think about how I am preventing future health problems.
+  + Item 75 (green): I frequently think about how physical activity is good for me while I do it. 
+  + Item 103 (green): While working out, I'm usually thinking about my health goals. 
+  + Item 104 (green): Immediately after working out, I think about the positive effects on my health.
+  + Item 132 (green): I think about how exercise improves my health after most workouts.
+  + Item 159 (green): During a workout, I often think about the progress I am making toward a healthier lifestyle.
+  + Item 160 (green): After a workout, the fact that I am preventing future health problems is on my mind.
+  + Item 184 (green): When I'm done working out, I think about the progress I've made toward living.
+  + Item 242 (green): During exercise, I normally think about how it's helping me live a long and healthy life.
+  + Item 283 (green): While I workout, I think about how I'm improving my heart health.
+  </font> 
+  <font color = 'gray'>
+  + Item 76 (yellow): Following my exercise sessions, I often think about progress I've made toward my health. 
+  + Item 183 (yellow): While exercising, I feel like I am managing my health status (e.g., medical conditions, illness, injuries, pain).
+  + Item 225 (yellow):  During my workouts, I often think about how I am improving my physical fitness.
+  + Item 273 (yellow): After physical activity, I often think about how I've improved my heart health.
+  </font> 
+- Physical Pain and Fatigue Subscale 
+  <font color = 'gray'>
+  + Item 3 (yellow): It hurts while I workout. 
+  + (Reverse) Item 33 (yellow): I am full of energy after physical activity. 
+  + Item 64 (yellow): I am tired after physical activity. 
+  + Item 92 (yellow): My body hurts after physical activity. 
+  + Item 120 (yellow): I'm sore after I exercise. 
+  + Item 174 (yellow): While I do physical activity, I feel exhausted.
+  + Item 198 (yellow): While I'm exercising, I find it physically difficult.
+  + Item 199 (yellow): My body is fatigued after a workout.
+  + Item 205 (yellow): I aggravate a health condition when I exercise. 
+  + Item 253 (yellow): When I workout, I feel pain.
+  + Item 254 (yellow): I am worn out after I exercise.
+  + Item 269 (yellow): When I do physical activity, I feel short of breath.
+  + Item 270 (yellow): I am often in pain after a workout.
+  + Item 285 (yellow): I've noticed working out often makes me tired.
+  + Item 286 (yellow): My joints ache more when I exercise regularly.
+  + Item 289 (yellow): I feel awful at times after I do physical activity.
+  + Item 307 (yellow): During exercise, I feel exhausted.
+  </font> 
+- Cognitive Effects/Improvements Subscale 
+  <font color = 'green'>
+  + Item 52 (green): My focus improves when I'm in a workout session.
+  </font> 
+  <font color = 'gray'>
+  + Item 22 (yellow): I've experienced that consistent physical activity helps me manage my stress.
+  + Item 25 (yellow): When I workout regularly, my ability to pay attention is better. 
+  + Item 51 (yellow): I have found that I'm less anxious when I workout consistently. 
+  + Item 53 (yellow): After physical activity, my mind is clearer. 
+  + Item 54 (yellow): I've noticed regularly physical activity keeps my mind sharp. 
+  + Item 79 (yellow): I've noticed that my mood is better when I engage in regular physical activity.
+  + Item 80 (yellow): My mind works faster during exercise. 
+  + Item 81 (yellow): I notice my focus is better after I exercise. 
+  + Item 82 (yellow): My focus is better when I exercise frequently. 
+  + Item 89 (yellow): When I'm in a workout session, I am less tense.   
+  + Item 90 (yellow): After I exercise, I feel calm.
+  + Item 109 (yellow): I can think more quickly after being physically active.
+  + Item 135 (yellow): When I am exercising regularly, I typically feel more calm.
+  + Item 136 (yellow): I find it easier to make important decisions during physical activity.
+  + Item 137 (yellow): My thoughts are more organized after I workout.
+  + Item 138 (yellow): When I get regular physical activity, my mind seems to work better.
+  + Item 163 (yellow): When I work out often, I've found my life is easier to deal with.
+  + Item 164 (yellow): During a workout session, good ideas often come to mind.
+  + Item 165 (yellow): I am less distracted after being physically active.
+  + Item 166 (yellow): I'm less distracted in my day-to-day life when I exercise consistently.
+  + Item 187 (yellow): When I do regular physical activity, I find daily activities are more enjoyable.
+  + Item 188 (yellow): I get better perspective on problems while I workout.
+  + Item 189 (yellow): I've noticed that I can make decisions more easily after a workout.
+  + Item 190 (yellow): I make better decisions when I workout routinely.
+  + Item 196 (yellow): During exercise, I become less anxious.
+  + Item 197 (yellow): After I exercise, I feel at peace.
+  + Item 210 (yellow): During physical activity, I come up with new solutions to things.
+  + Item 211 (yellow): After being physically active, I make better decisions.
+  + Item 212 (yellow): I experience much less mental fatigue when I workout frequently.
+  + Item 229 (yellow): My awareness is improved while I exercise.
+  + Item 230 (yellow): After I finish a workout, I have more mental energy.
+  + Item 231 (yellow): When I engage in regular physical activity, my ability to solve difficult problems improves.
+  + Item 246 (yellow): It's easier to solve difficult problems after exercising.
+  + Item 247 (yellow): My memory is better when I engage in frequent physical activity.
+  + Item 261 (yellow): I've noticed more peace in my life when I workout regularly.
+  + Item 263 (yellow): I've noticed my mental performance improves a lot when I workout regularly.
+  + Item 279 (yellow): I find I'm less forgetful after a workout session.
+  + Item 291 (yellow): I notice a lot less stress in my life when I workout regularly.
+  + Item 294 (yellow): I have found I'm much less stressed after physical activity.
+  + Item 296 (yellow): I'm noticeably less depressed when I do physical activity regularly.
+  + Item 307 (yellow): I'm a lot less anxious after physical activity.
+  + Item 310 (yellow): I am noticeably less irritable after I exercise.
+  </font>
+  
