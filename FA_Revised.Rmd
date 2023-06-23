@@ -141,13 +141,49 @@ Merge7 <- merge(Merge6, SMU_Positive, by = "Item_No", all.x = TRUE)
 Final_DF <- merge(Merge7, SMU_Negative, by = "Item_No", all.x = TRUE)
 ```
 
+```{r}
+Final_DF_NoNum <- Final_DF[,-1]
 
+Final_DF$LoadedFactor <- apply(Final_DF_NoNum, 1, function(i) paste(colnames(Final_DF_NoNum)[!is.na(i) ], collapse = ", "))
 
+function1 <- function(x) {
+  count.fields(textConnection(Final_DF$LoadedFactor[x]), sep = ",", blank.lines.skip = FALSE)
+}
 
+tbl1 <- as.data.frame(table(function1(1:312)))
 
+knitr::kable(tbl1)
+```
 
+```{r}
+FL_count <- as.list(function1(1:312)) # number of factor loadings per item 
 
+### ZERO FACTOR LOADINGS ###
 
+# red list, items that did not load on any factor =========================== RED 1 START
+
+zeroFL_items <- which(FL_count == 0)
+
+# =========================================================================== RED 1 END
+
+### ONE FACTOR LOADING ###
+
+# red list, items that only loaded on one factor =========================== RED 2 START
+
+oneFL_items <- which(FL_count == 1)
+
+# =========================================================================== RED 2 END
+
+### TWO FACTOR LOADINGS 
+
+twoFL_items <- which(FL_count == 2) # subsetting for items that loaded on two factors
+
+twoFL_df <- Final_DF[twoFL_items, ]
+
+tbl2 <- as.data.frame(table(twoFL_df_PN$LoadedFactor))
+
+knitr::kable(tbl2)
+```
 
 
 
