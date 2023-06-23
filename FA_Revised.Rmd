@@ -98,9 +98,13 @@ pre {
 ### Importing Data  
 
 ```{r}
-# setwd("/Users/kdlee/Desktop/MIAU-exer-FA")
+# setwd("/Users/kdlee/Desktop/MIAU-exer-FA/data")
 
-setwd("/Users/carolinelee/Desktop/MIAU-exer-FA/data")
+# setwd("/Users/carolinelee/Desktop/MIAU-exer-FA/data")
+
+# setwd("/Users/48909138/OneDrive - Southern Methodist University/Desktop/MIAU-exer-FA/data")
+
+setwd("/Users/48909138/OneDrive - Southern Methodist University/Desktop/MIAU-exer-FA/data")
 
 Community_Overall <- read_csv("Com_Overall_FA.csv")
 
@@ -180,16 +184,71 @@ twoFL_items <- which(FL_count == 2) # subsetting for items that loaded on two fa
 
 twoFL_df <- Final_DF[twoFL_items, ]
 
-tbl2 <- as.data.frame(table(twoFL_df_PN$LoadedFactor))
+tbl2 <- as.data.frame(table(twoFL_df$LoadedFactor))
 
 knitr::kable(tbl2)
 ```
 
+```{r}
+twoFL_notsplit_df <- with(twoFL_df, which(LoadedFactor %in% c("Com_Neg_F2_NegApp, SMU_Overall_F4_NegApp", "Com_Neg_F5_NegApp_Prelim, SMU_Overall_F4_NegApp", "Com_Pos_F1_Cog, SMU_Pos_F1_Cog", "Com_Pos_F4_Flow, SMU_Overall_F8_Flow", "MTurk_Neg_F2_NegHealth, SMU_Neg_F5_NegHealth_Prelim", "MTurk_Overall_F7_Flow, SMU_Overall_F8_Flow")))
 
+twoFL_notsplit_df <- twoFL_df[twoFL_notsplit_df, ]
 
+twoFL_notsplit_NoNum <- twoFL_notsplit_df[,-c(1, 49)] # removing non-numerical columns
 
+twoFL_notsplit_df$firstloading <- apply(twoFL_notsplit_NoNum, 1, function(z) na.omit(z)[1]) # extract first loading 
 
+twoFL_notsplit_df$firstloading <- as.numeric(twoFL_notsplit_df$firstloading)
 
+twoFL_notsplit_df$secondloading <- apply(twoFL_notsplit_NoNum, 1, function(z) na.omit(z)[2]) # extract second loading 
+
+twoFL_notsplit_df$secondloading <- as.numeric(twoFL_notsplit_df$secondloading)
+
+twoFL_notsplit_df$firstFL_inrange <- ifelse(abs(twoFL_notsplit_df$firstloading) >= .40 & abs(twoFL_notsplit_df$firstloading) < .75, TRUE, FALSE)
+
+twoFL_notsplit_df$secondFL_inrange <- ifelse(abs(twoFL_notsplit_df$secondloading) >= .40 & abs(twoFL_notsplit_df$secondloading) < .75, TRUE, FALSE)
+
+twoFL_notsplit_df$category <- ifelse(twoFL_notsplit_df$firstFL_inrange == TRUE & twoFL_notsplit_df$secondFL_inrange == TRUE, "YELLOW", "RED")
+
+# items that loaded in range in two different samples for the same factor ======== YELLOW 1 START
+
+twoFL_YELLOW <- with(twoFL_notsplit_df, which(category %in% "YELLOW"))
+
+twoFL_YELLOW <- twoFL_notsplit_df[twoFL_YELLOW, ]
+
+twoFL_YELLOW_items <- twoFL_YELLOW$Item_No 
+
+# ========================================================================= YELLOW 1 END 
+
+# non-split items that were in range in only one or out of range in both == RED 3 START
+
+twoFL_RED_notsplit <- with(twoFL_notsplit_df, which(category %in% "RED"))
+
+twoFL_RED_notsplit <- twoFL_notsplit_df[twoFL_RED_notsplit, ]
+
+twoFL_RED_notsplit_items <- twoFL_RED_notsplit$Item_No 
+
+# ========================================================================= RED 3 END 
+
+# split items ============================================================= RED 4 START
+twoFL_split_df <- with(twoFL_df, which(LoadedFactor %in% c("Com_Neg_F1_Time, MTurk_Neg_F5_Pain", "Com_Overall_F7_Soc, MTurk_Overall_F4_PosApp", "Com_Pos_F1_Cog, Com_Pos_F2_Pride", "Com_Pos_F7_Flow_Prelim, SMU_Overall_F5_Prog", "MTurk_Overall_F4_PosApp, SMU_Neg_F1_Time")))
+
+twoFL_split_df <- twoFL_df[twoFL_split_df, ]
+
+twoFL_RED_split_items <- twoFL_split_df$Item_No
+
+# ========================================================================= RED 4 END
+
+### THREE FACTOR LOADINGS 
+
+threeFL_df <- which(FL_count == 3) # subsetting for items that loaded on three factors
+
+threeFL_df <- Final_DF[threeFL_df, ]
+
+tbl3 <- as.data.frame(table(threeFL_df$LoadedFactor))
+
+knitr::kable(tbl3)
+```
 
 
 
