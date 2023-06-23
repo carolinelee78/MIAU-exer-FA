@@ -1,0 +1,155 @@
+---
+title: "Exercise Measure Development PCA"
+date: "`r format(Sys.time(), '%m/%d/%y')`"
+output: 
+  html_document: 
+    theme: yeti 
+    toc: true
+    toc_float: true
+---
+
+```{r setup, include=FALSE}
+.libPaths(Sys.getenv("R_LIBS_USER"))
+
+knitr::opts_chunk$set(echo = TRUE)
+
+# detach all libraries
+
+detachAllPackages <- function() {
+  basic.packages <- c("package:stats", "package:graphics", "package:grDevices", "package:utils", "package:datasets", "package:methods", "package:base")
+  package.list <- search()[ifelse(unlist(gregexpr("package:", search()))==1, TRUE, FALSE)]
+  package.list <- setdiff(package.list, basic.packages)
+  if (length(package.list)>0)  for (package in package.list) detach(package,  character.only=TRUE)
+}
+detachAllPackages()
+
+# function to load libraries
+
+pkgTest <- function(pkg){
+  new.pkg <- pkg[!(pkg %in% installed.packages()[,  "Package"])]
+  if (length(new.pkg)) 
+    install.packages(new.pkg,  dependencies = TRUE)
+  sapply(pkg,  require,  character.only = TRUE)
+}
+
+# knitr
+
+knitr::knit_hooks$set(output = function(x, options){
+  if(!is.null(options$max_height)){
+    paste('<pre style = "max-height:', options$max_height, '; float: left; width: 910px; overflow-y: auto;">', x, "</pre>", sep = "")
+  }else{
+    x
+  }
+  
+})
+
+# loading packages 
+lapply(c("tidyverse"),pkgTest)
+lapply(c("readr"),pkgTest)
+lapply(c("paletteer"),pkgTest)
+lapply(c("kableExtra"),pkgTest)
+library(tidyverse)
+library(readr)
+library(paletteer)
+library(kableExtra)
+```
+
+```{r, include=FALSE}
+options(width = 60)
+local({
+  hook_output <- knitr::knit_hooks$get('output')
+  knitr::knit_hooks$set(output = function(x, options) {
+    if (!is.null(options$max.height)) options$attr.output <- c(
+      options$attr.output,
+      sprintf('style="max-height: %s;"', options$max.height)
+    )
+    hook_output(x, options)
+  })
+})
+```
+
+```{css, echo=FALSE}
+<style type="text/css">
+
+body, td {
+   font-size: 14px;
+}
+code.r{
+  font-size: 12px;
+}
+pre {
+  font-size: 12px
+}
+</style>
+```
+
+```{css, echo=FALSE}
+  #TOC {
+    max-width: fit-content;
+    white-space: nowrap;
+  }
+  
+  div:has(> #TOC) {
+    display: flex;
+    flex-direction: row-reverse;
+}
+```
+
+### Importing Data  
+
+```{r}
+setwd("/Users/kdlee/Desktop/MIAU-exer-FA")
+
+Community_Overall_Sample <- read_csv("Exercise_Com_Overall.csv")
+
+MTurk_Overall_Sample <- read_csv("Exercise_MTurk_Overall.csv")
+
+SMU_Overall_Sample <- read_csv("Exercise_SMU_Overall.csv")
+```
+
+### Compiling Data 
+
+```{r, results='asis'}
+ComMTurk_Overall_Sample <- merge(Community_Overall_Sample, MTurk_Overall_Sample, by = "Item_No", all.x = TRUE)
+
+Combined_Overall_Sample <- merge(ComMTurk_Overall_Sample, SMU_Overall_Sample, by = "Item_No", all.x = TRUE)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
