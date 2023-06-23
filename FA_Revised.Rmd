@@ -98,21 +98,47 @@ pre {
 ### Importing Data  
 
 ```{r}
-setwd("/Users/kdlee/Desktop/MIAU-exer-FA")
+# setwd("/Users/kdlee/Desktop/MIAU-exer-FA")
 
-Community_Overall_Sample <- read_csv("Exercise_Com_Overall.csv")
+setwd("/Users/carolinelee/Desktop/MIAU-exer-FA/data")
 
-MTurk_Overall_Sample <- read_csv("Exercise_MTurk_Overall.csv")
+Community_Overall <- read_csv("Com_Overall_FA.csv")
 
-SMU_Overall_Sample <- read_csv("Exercise_SMU_Overall.csv")
+Community_Positive <- read_csv("Com_Pos_FA.csv")
+
+Community_Negative <- read_csv("Com_Neg_FA.csv")
+
+MTurk_Overall <- read_csv("MTurk_Overall_FA.csv")
+
+MTurk_Positive <- read_csv("MTurk_Pos_FA.csv")
+
+MTurk_Negative <- read_csv("MTurk_Neg_FA.csv")
+
+SMU_Overall <- read_csv("SMU_Overall_FA.csv")
+
+SMU_Positive <- read_csv("SMU_Pos_FA.csv")
+
+SMU_Negative <- read_csv("SMU_Neg_FA.csv")
 ```
 
 ### Compiling Data 
 
 ```{r, results='asis'}
-ComMTurk_Overall_Sample <- merge(Community_Overall_Sample, MTurk_Overall_Sample, by = "Item_No", all.x = TRUE)
+Merge1 <- merge(Community_Overall, Community_Positive, by = "Item_No", all.x = TRUE)
 
-Combined_Overall_Sample <- merge(ComMTurk_Overall_Sample, SMU_Overall_Sample, by = "Item_No", all.x = TRUE)
+Merge2 <- merge(Merge1, Community_Negative, by = "Item_No", all.x = TRUE)
+
+Merge3 <- merge(Merge2, MTurk_Overall, by = "Item_No", all.x = TRUE)
+
+Merge4 <- merge(Merge3, MTurk_Positive, by = "Item_No", all.x = TRUE)
+
+Merge5 <- merge(Merge4, MTurk_Negative, by = "Item_No", all.x = TRUE)
+
+Merge6 <- merge(Merge5, SMU_Overall, by = "Item_No", all.x = TRUE)
+
+Merge7 <- merge(Merge6, SMU_Positive, by = "Item_No", all.x = TRUE)
+
+Final_DF <- merge(Merge7, SMU_Negative, by = "Item_No", all.x = TRUE)
 ```
 
 
