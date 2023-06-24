@@ -204,9 +204,9 @@ twoFL_notsplit_df$secondloading <- apply(twoFL_notsplit_NoNum, 1, function(z) na
 
 twoFL_notsplit_df$secondloading <- as.numeric(twoFL_notsplit_df$secondloading)
 
-twoFL_notsplit_df$firstFL_inrange <- ifelse(abs(twoFL_notsplit_df$firstloading) >= .40 & abs(twoFL_notsplit_df$firstloading) < .75, TRUE, FALSE)
+twoFL_notsplit_df$firstFL_inrange <- ifelse(abs(twoFL_notsplit_df$firstloading) >= .40, TRUE, FALSE)
 
-twoFL_notsplit_df$secondFL_inrange <- ifelse(abs(twoFL_notsplit_df$secondloading) >= .40 & abs(twoFL_notsplit_df$secondloading) < .75, TRUE, FALSE)
+twoFL_notsplit_df$secondFL_inrange <- ifelse(abs(twoFL_notsplit_df$secondloading) >= .40, TRUE, FALSE)
 
 twoFL_notsplit_df$category <- ifelse(twoFL_notsplit_df$firstFL_inrange == TRUE & twoFL_notsplit_df$secondFL_inrange == TRUE, "YELLOW", "RED")
 
@@ -249,8 +249,9 @@ tbl3 <- as.data.frame(table(threeFL_df$LoadedFactor))
 
 knitr::kable(tbl3)
 ```
+
 ```{r}
-threeFL_notsplit_df <- with(threeFL_df, which(LoadedFactor %in% c("Com_Neg_F1_Time, MTurk_Neg_F4_Time, SMU_Neg_F1_Time", "Com_Neg_F2_NegApp, MTurk_Neg_F1_NegApp, SMU_Overall_F4_NegApp", "Com_Neg_F4_Flow_Prelim, MTurk_Overall_F7_Flow, SMU_Overall_F8_Flow", "Com_Overall_F4_Pain, MTurk_Neg_F3_Pain, SMU_Neg_F4_Pain", "Com_Overall_F4_Pain, MTurk_Neg_F3_Pain, SMU_Neg_F6_Pain", "Com_Overall_F4_Pain, MTurk_Neg_F5_Pain, SMU_Neg_F6_Pain", "Com_Overall_F5_Prog, MTurk_Overall_F5_Prog, SMU_Overall_F5_Prog", "Com_Overall_F6_PosApp, MTurk_Overall_F4_PosApp, SMU_Overall_F6_PosApp", "Com_Pos_F1_Cog, MTurk_Overall_F3_Cog, SMU_Pos_F1_Cog")))
+threeFL_notsplit_df <- with(threeFL_df, which(LoadedFactor %in% c("Com_Neg_F1_Time, MTurk_Neg_F4_Time, SMU_Neg_F1_Time", "Com_Neg_F2_NegApp, MTurk_Neg_F1_NegApp, SMU_Overall_F4_NegApp", "Com_Neg_F4_Flow_Prelim, MTurk_Overall_F7_Flow, SMU_Overall_F8_Flow", "Com_Overall_F4_Pain, MTurk_Neg_F3_Pain, SMU_Neg_F4_Pain", "Com_Overall_F4_Pain, MTurk_Neg_F3_Pain, SMU_Neg_F6_Pain", "Com_Overall_F4_Pain, MTurk_Neg_F5_Pain, SMU_Neg_F6_Pain", "Com_Overall_F5_Prog, MTurk_Overall_F5_Prog, SMU_Overall_F5_Prog", "Com_Overall_F6_PosApp, MTurk_Overall_F4_PosApp, SMU_Overall_F6_PosApp", "Com_Pos_F1_Cog, MTurk_Overall_F3_Cog, SMU_Pos_F1_Cog", "Com_Pos_F2_Pride, MTurk_Pos_F1_Pride, SMU_Pos_F3_Pride", "Com_Pos_F3_Phys, MTurk_Pos_F2_Phys, SMU_Pos_F2_Phys", "Com_Pos_F3_Phys, MTurk_Pos_F3_Phys, SMU_Pos_F2_Phys", "Com_Pos_F4_Flow, MTurk_Overall_F7_Flow, SMU_Overall_F8_Flow")))
 
 threeFL_notsplit_df <- threeFL_df[threeFL_notsplit_df, ]
 
@@ -268,35 +269,346 @@ threeFL_notsplit_df$thirdloading <- apply(threeFL_notsplit_NoNum, 1, function(z)
 
 threeFL_notsplit_df$thirdloading <- as.numeric(threeFL_notsplit_df$thirdloading)
 
-threeFL_notsplit_df$firstFL_inrange <- ifelse(abs(threeFL_notsplit_df$firstloading) >= .40 & abs(threeFL_notsplit_df$firstloading) < .75, TRUE, FALSE)
+threeFL_notsplit_df$firstFL_inrange <- ifelse(abs(threeFL_notsplit_df$firstloading) >= .40, TRUE, FALSE)
 
-threeFL_notsplit_df$secondFL_inrange <- ifelse(abs(threeFL_notsplit_df$secondloading) >= .40 & abs(threeFL_notsplit_df$secondloading) < .75, TRUE, FALSE)
+threeFL_notsplit_df$secondFL_inrange <- ifelse(abs(threeFL_notsplit_df$secondloading) >= .40, TRUE, FALSE)
 
-threeFL_notsplit_df$thirdFL_inrange <- ifelse(abs(threeFL_notsplit_df$thirdloading) >= .40 & abs(threeFL_notsplit_df$thirdloading) < .75, TRUE, FALSE)
+threeFL_notsplit_df$thirdFL_inrange <- ifelse(abs(threeFL_notsplit_df$thirdloading) >= .40, TRUE, FALSE)
 
 threeFL_notsplit_df$category <- ifelse(threeFL_notsplit_df$firstFL_inrange == TRUE & threeFL_notsplit_df$secondFL_inrange == TRUE & threeFL_notsplit_df$thirdFL_inrange == TRUE, "GREEN", "NOT_GREEN")
+
+# items that loaded in range for the same factor across all three samples ====================== GREEN 1 START
+
+threeFL_GREEN <- with(threeFL_notsplit_df, which(category %in% "GREEN"))
+
+threeFL_GREEN <- threeFL_notsplit_df[threeFL_GREEN, ]
+
+threeFL_GREEN_items <- threeFL_GREEN$Item_No  
+
+# ============================================================================================== GREEN 1 END 
+
+threeFL_NOTGREEN <- with(threeFL_notsplit_df, which(category %in% "NOT_GREEN"))
+
+threeFL_NOTGREEN <- threeFL_notsplit_df[threeFL_NOTGREEN, ]
+
+threeFL_NOTGREEN_loadings <- threeFL_NOTGREEN[,49:55]
+```
+
+```{r}
+threeFL_NOTGREEN_row1 <- as.data.frame(threeFL_NOTGREEN_loadings[1,])
+
+knitr::kable(threeFL_NOTGREEN_row1) # good in 2/3, yellow
+```
+
+```{r}
+threeFL_NOTGREEN_row2 <- as.data.frame(threeFL_NOTGREEN_loadings[2,])
+
+knitr::kable(threeFL_NOTGREEN_row2) # good in 2/3, yellow
+```
+
+```{r}
+threeFL_NOTGREEN_row3 <- as.data.frame(threeFL_NOTGREEN_loadings[3,])
+
+knitr::kable(threeFL_NOTGREEN_row3) # good in 2/3, yellow
+```
+
+```{r}
+threeFL_NOTGREEN_row4 <- as.data.frame(threeFL_NOTGREEN_loadings[4,])
+
+knitr::kable(threeFL_NOTGREEN_row4) # good in 2/3, yellow
+```
+
+```{r}
+threeFL_NOTGREEN_row5 <- as.data.frame(threeFL_NOTGREEN_loadings[5,])
+
+knitr::kable(threeFL_NOTGREEN_row5) # only good in 1 sample, red
+```
+
+```{r}
+threeFL_NOTGREEN_row6 <- as.data.frame(threeFL_NOTGREEN_loadings[6,])
+
+knitr::kable(threeFL_NOTGREEN_row6) # only good in 1 sample, red
+```
+
+```{r}
+threeFL_NOTGREEN_row7 <- as.data.frame(threeFL_NOTGREEN_loadings[7,])
+
+knitr::kable(threeFL_NOTGREEN_row7) # only good in 1 sample, red
+```
+
+```{r}
+# ========================================================================== YELLOW 2 START 
+
+threeFL_YELLOW_notsplit <- threeFL_NOTGREEN[c(1:4),]
+
+threeFL_YELLOW_notsplit_items <- threeFL_YELLOW_notsplit$Item_No
+
+# =========================================================================== YELLOW 2 END  
+
+# ========================================================================== RED 5 START 
+
+threeFL_RED_notsplit <- threeFL_NOTGREEN[c(5:7),]
+
+threeFL_RED_notsplit_items <- threeFL_RED_notsplit$Item_No
+# ========================================================================== RED 5 END 
+
+```
+
+```{r}
+threeFL_split_df <- with(threeFL_df, which(!LoadedFactor %in% c("Com_Neg_F1_Time, MTurk_Neg_F4_Time, SMU_Neg_F1_Time", "Com_Neg_F2_NegApp, MTurk_Neg_F1_NegApp, SMU_Overall_F4_NegApp", "Com_Neg_F4_Flow_Prelim, MTurk_Overall_F7_Flow, SMU_Overall_F8_Flow", "Com_Overall_F4_Pain, MTurk_Neg_F3_Pain, SMU_Neg_F4_Pain", "Com_Overall_F4_Pain, MTurk_Neg_F3_Pain, SMU_Neg_F6_Pain", "Com_Overall_F4_Pain, MTurk_Neg_F5_Pain, SMU_Neg_F6_Pain", "Com_Overall_F5_Prog, MTurk_Overall_F5_Prog, SMU_Overall_F5_Prog", "Com_Overall_F6_PosApp, MTurk_Overall_F4_PosApp, SMU_Overall_F6_PosApp", "Com_Pos_F1_Cog, MTurk_Overall_F3_Cog, SMU_Pos_F1_Cog", "Com_Pos_F2_Pride, MTurk_Pos_F1_Pride, SMU_Pos_F3_Pride", "Com_Pos_F3_Phys, MTurk_Pos_F2_Phys, SMU_Pos_F2_Phys", "Com_Pos_F3_Phys, MTurk_Pos_F3_Phys, SMU_Pos_F2_Phys" ,"Com_Pos_F4_Flow, MTurk_Overall_F7_Flow, SMU_Overall_F8_Flow")))
+
+threeFL_split_df <- threeFL_df[threeFL_split_df, ]
+
+threeFL_split_NoNum <- threeFL_split_df[,-c(1, 49)] # removing non-numerical columns
+
+threeFL_split_df$firstloading <- apply(threeFL_split_NoNum, 1, function(z) na.omit(z)[1]) # extract first loading 
+
+threeFL_split_df$firstloading <- as.numeric(threeFL_split_df$firstloading)
+
+threeFL_split_df$secondloading <- apply(threeFL_split_NoNum, 1, function(z) na.omit(z)[2]) # extract second loading 
+
+threeFL_split_df$secondloading <- as.numeric(threeFL_split_df$secondloading)
+
+threeFL_split_df$thirdloading <- apply(threeFL_split_NoNum, 1, function(z) na.omit(z)[3]) # extract third loading 
+
+threeFL_split_df$thirdloading <- as.numeric(threeFL_split_df$thirdloading)
+
+threeFL_split_df$firstFL_inrange <- ifelse(abs(threeFL_split_df$firstloading) >= .40, TRUE, FALSE)
+
+threeFL_split_df$secondFL_inrange <- ifelse(abs(threeFL_split_df$secondloading) >= .40, TRUE, FALSE)
+
+threeFL_split_df$thirdFL_inrange <- ifelse(abs(threeFL_split_df$thirdloading) >= .40, TRUE, FALSE)
+
+threeFL_split_loadings <- threeFL_split_df[,49:55]
+```
+
+```{r}
+threeFL_split_row1 <- as.data.frame(threeFL_split_loadings[1,])
+
+knitr::kable(threeFL_split_row1) # cross-loading >.30, RED
+```
+
+```{r}
+threeFL_split_row2 <- as.data.frame(threeFL_split_loadings[2,])
+
+knitr::kable(threeFL_split_row2) # cross-loading >.30, RED
+```
+
+```{r}
+threeFL_split_row3 <- as.data.frame(threeFL_split_loadings[3,])
+
+knitr::kable(threeFL_split_row3) # cross-loading >.30, RED
+```
+
+```{r}
+threeFL_split_row4 <- as.data.frame(threeFL_split_loadings[4,])
+
+knitr::kable(threeFL_split_row4) # no cross-loading >.30 but did not load >.4 on any factor, RED
+```
+
+```{r}
+threeFL_split_row5 <- as.data.frame(threeFL_split_loadings[5,])
+
+knitr::kable(threeFL_split_row5) # no cross-loading >.30 but did not load >.4 on any factor, RED
+```
+
+```{r}
+threeFL_split_row6 <- as.data.frame(threeFL_split_loadings[6,])
+
+knitr::kable(threeFL_split_row6) # cross-loading >.30, RED
+```
+
+```{r}
+threeFL_split_row7 <- as.data.frame(threeFL_split_loadings[7,])
+
+knitr::kable(threeFL_split_row7) # cross-loading >.30, RED
+```
+
+```{r}
+threeFL_split_row8 <- as.data.frame(threeFL_split_loadings[8,])
+
+knitr::kable(threeFL_split_row8) # cross-loading >.30, RED 
+```
+
+```{r}
+threeFL_split_row9 <- as.data.frame(threeFL_split_loadings[9,])
+
+knitr::kable(threeFL_split_row9) # cross-loading >.30, RED
+```
+
+```{r}
+threeFL_split_row10 <- as.data.frame(threeFL_split_loadings[10,])
+
+knitr::kable(threeFL_split_row10) # cross-loading >.30, RED 
+```
+
+```{r}
+threeFL_split_row11 <- as.data.frame(threeFL_split_loadings[11,])
+
+knitr::kable(threeFL_split_row11) # cross-loading >.30, RED
+```
+
+```{r}
+threeFL_split_row12 <- as.data.frame(threeFL_split_loadings[12,])
+
+knitr::kable(threeFL_split_row12) # cross-loading >.30, RED 
+```
+
+```{r}
+threeFL_split_row13 <- as.data.frame(threeFL_split_loadings[13,])
+
+knitr::kable(threeFL_split_row13) # cross-loading >.30, RED 
+```
+
+```{r}
+threeFL_split_row14 <- as.data.frame(threeFL_split_loadings[14,])
+
+knitr::kable(threeFL_split_row14) # cross-loading >.30, RED 
+```
+
+```{r}
+threeFL_split_row15 <- as.data.frame(threeFL_split_loadings[15,])
+
+knitr::kable(threeFL_split_row15) # cross-loading >.30, RED 
+```
+
+```{r}
+threeFL_split_row16 <- as.data.frame(threeFL_split_loadings[16,])
+
+knitr::kable(threeFL_split_row16) # cross-loading >.30, RED 
+```
+
+```{r}
+threeFL_split_row17 <- as.data.frame(threeFL_split_loadings[17,])
+
+knitr::kable(threeFL_split_row17) # cross-loading >.30, RED 
+```
+
+```{r}
+threeFL_split_row18 <- as.data.frame(threeFL_split_loadings[18,])
+
+knitr::kable(threeFL_split_row18) # cross-loading >.30, RED 
+```
+
+```{r}
+threeFL_split_row19 <- as.data.frame(threeFL_split_loadings[19,])
+
+knitr::kable(threeFL_split_row19) # cross-loading >.30, RED 
+```
+
+```{r}
+threeFL_split_row20 <- as.data.frame(threeFL_split_loadings[20,])
+
+knitr::kable(threeFL_split_row20) # loaded >.4 on two factors with cross-loading <.3, YELLOW
+```
+
+```{r}
+threeFL_split_row21 <- as.data.frame(threeFL_split_loadings[21,])
+
+knitr::kable(threeFL_split_row21) # cross-loading >.30, RED
+```
+
+```{r}
+threeFL_split_row22 <- as.data.frame(threeFL_split_loadings[22,])
+
+knitr::kable(threeFL_split_row22) # loaded >.4 on two factors with cross-loading <.3, YELLOW
+```
+
+```{r}
+threeFL_split_row23 <- as.data.frame(threeFL_split_loadings[23,])
+
+knitr::kable(threeFL_split_row23) # no cross-loading >.30 but did not load >.4 on any factor, RED
+```
+
+```{r}
+threeFL_split_row24 <- as.data.frame(threeFL_split_loadings[24,])
+
+knitr::kable(threeFL_split_row24) # cross-loading >.30, RED
+```
+
+```{r}
+threeFL_split_row25 <- as.data.frame(threeFL_split_loadings[25,])
+
+knitr::kable(threeFL_split_row25) # cross-loading >.30, RED
+```
+
+```{r}
+threeFL_split_row26 <- as.data.frame(threeFL_split_loadings[26,])
+
+knitr::kable(threeFL_split_row26) # loaded >.4 on two factors with cross-loading <.3, YELLOW
+```
+
+```{r}
+threeFL_split_row27 <- as.data.frame(threeFL_split_loadings[27,])
+
+knitr::kable(threeFL_split_row27) # cross-loading >.30, RED
+```
+
+```{r}
+threeFL_split_row28 <- as.data.frame(threeFL_split_loadings[28,])
+
+knitr::kable(threeFL_split_row28) # no cross-loading >.30 but did not load >.4 on any factor, RED
+```
+
+```{r}
+threeFL_split_row29 <- as.data.frame(threeFL_split_loadings[29,])
+
+knitr::kable(threeFL_split_row29) # cross-loading >.30, RED
+```
+
+```{r}
+threeFL_split_row30 <- as.data.frame(threeFL_split_loadings[30,])
+
+knitr::kable(threeFL_split_row30) # cross-loading >.30, RED
+```
+
+```{r}
+threeFL_split_row31 <- as.data.frame(threeFL_split_loadings[31,])
+
+knitr::kable(threeFL_split_row31) # cross-loading >.30, RED
+```
+
+```{r}
+threeFL_split_row32 <- as.data.frame(threeFL_split_loadings[32,])
+
+knitr::kable(threeFL_split_row32) # cross-loading >.30, RED
+```
+
+```{r}
+threeFL_split_row33 <- as.data.frame(threeFL_split_loadings[33,])
+
+knitr::kable(threeFL_split_row33) # no cross-loading >.30 but only loaded >.4 in one sample, RED
+```
+
+```{r}
+threeFL_split_row34 <- as.data.frame(threeFL_split_loadings[34,])
+
+knitr::kable(threeFL_split_row34) # cross-loading >.30, RED
+```
+
+```{r}
+threeFL_split_row35 <- as.data.frame(threeFL_split_loadings[35,])
+
+knitr::kable(threeFL_split_row35) # no cross-loading >.30 but only loaded >.4 in one sample, RED
+```
+
+```{r}
+threeFL_split_row36 <- as.data.frame(threeFL_split_loadings[36,])
+
+knitr::kable(threeFL_split_row36) # no cross-loading >.30 but only loaded >.4 in one sample, RED
+```
+
+```{r}
+threeFL_split_row37 <- as.data.frame(threeFL_split_loadings[37,])
+
+knitr::kable(threeFL_split_row37) # no cross-loading >.30 but only loaded >.4 in one sample, RED
+```
+
+```{r}
+threeFL_split_row38 <- as.data.frame(threeFL_split_loadings[38,])
+
+knitr::kable(threeFL_split_row38) # cross-loading >.30, RED
 ```
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+ 
