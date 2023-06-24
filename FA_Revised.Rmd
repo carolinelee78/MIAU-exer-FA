@@ -97,14 +97,14 @@ pre {
 
 ### Importing Data  
 
-```{r}
+```{r, warning=FALSE, message=FALSE}
 # setwd("/Users/kdlee/Desktop/MIAU-exer-FA/data")
 
 # setwd("/Users/carolinelee/Desktop/MIAU-exer-FA/data")
 
 # setwd("/Users/48909138/OneDrive - Southern Methodist University/Desktop/MIAU-exer-FA/data")
 
-setwd("/Users/48909138/OneDrive - Southern Methodist University/Desktop/MIAU-exer-FA/data")
+setwd("/Users/kdlee/Desktop/MIAU-exer-FA/data") 
 
 Community_Overall <- read_csv("Com_Overall_FA.csv")
 
@@ -249,7 +249,33 @@ tbl3 <- as.data.frame(table(threeFL_df$LoadedFactor))
 
 knitr::kable(tbl3)
 ```
+```{r}
+threeFL_notsplit_df <- with(threeFL_df, which(LoadedFactor %in% c("Com_Neg_F1_Time, MTurk_Neg_F4_Time, SMU_Neg_F1_Time", "Com_Neg_F2_NegApp, MTurk_Neg_F1_NegApp, SMU_Overall_F4_NegApp", "Com_Neg_F4_Flow_Prelim, MTurk_Overall_F7_Flow, SMU_Overall_F8_Flow", "Com_Overall_F4_Pain, MTurk_Neg_F3_Pain, SMU_Neg_F4_Pain", "Com_Overall_F4_Pain, MTurk_Neg_F3_Pain, SMU_Neg_F6_Pain", "Com_Overall_F4_Pain, MTurk_Neg_F5_Pain, SMU_Neg_F6_Pain", "Com_Overall_F5_Prog, MTurk_Overall_F5_Prog, SMU_Overall_F5_Prog", "Com_Overall_F6_PosApp, MTurk_Overall_F4_PosApp, SMU_Overall_F6_PosApp", "Com_Pos_F1_Cog, MTurk_Overall_F3_Cog, SMU_Pos_F1_Cog")))
 
+threeFL_notsplit_df <- threeFL_df[threeFL_notsplit_df, ]
+
+threeFL_notsplit_NoNum <- threeFL_notsplit_df[,-c(1, 49)] # removing non-numerical columns
+
+threeFL_notsplit_df$firstloading <- apply(threeFL_notsplit_NoNum, 1, function(z) na.omit(z)[1]) # extract first loading 
+
+threeFL_notsplit_df$firstloading <- as.numeric(threeFL_notsplit_df$firstloading)
+
+threeFL_notsplit_df$secondloading <- apply(threeFL_notsplit_NoNum, 1, function(z) na.omit(z)[2]) # extract second loading 
+
+threeFL_notsplit_df$secondloading <- as.numeric(threeFL_notsplit_df$secondloading)
+
+threeFL_notsplit_df$thirdloading <- apply(threeFL_notsplit_NoNum, 1, function(z) na.omit(z)[3]) # extract third loading 
+
+threeFL_notsplit_df$thirdloading <- as.numeric(threeFL_notsplit_df$thirdloading)
+
+threeFL_notsplit_df$firstFL_inrange <- ifelse(abs(threeFL_notsplit_df$firstloading) >= .40 & abs(threeFL_notsplit_df$firstloading) < .75, TRUE, FALSE)
+
+threeFL_notsplit_df$secondFL_inrange <- ifelse(abs(threeFL_notsplit_df$secondloading) >= .40 & abs(threeFL_notsplit_df$secondloading) < .75, TRUE, FALSE)
+
+threeFL_notsplit_df$thirdFL_inrange <- ifelse(abs(threeFL_notsplit_df$thirdloading) >= .40 & abs(threeFL_notsplit_df$thirdloading) < .75, TRUE, FALSE)
+
+threeFL_notsplit_df$category <- ifelse(threeFL_notsplit_df$firstFL_inrange == TRUE & threeFL_notsplit_df$secondFL_inrange == TRUE & threeFL_notsplit_df$thirdFL_inrange == TRUE, "GREEN", "NOT_GREEN")
+```
 
 
 
