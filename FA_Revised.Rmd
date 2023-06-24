@@ -610,5 +610,46 @@ threeFL_split_row38 <- as.data.frame(threeFL_split_loadings[38,])
 knitr::kable(threeFL_split_row38) # cross-loading >.30, RED
 ```
 
+```{r}
+# ========================================================================== YELLOW 3 START 
+
+threeFL_YELLOW_split <- threeFL_split_df[c(20, 22, 26),]
+
+threeFL_YELLOW_split_items <- threeFL_YELLOW_split$Item_No
+
+# =========================================================================== YELLOW 3 END  
+
+# ========================================================================== RED 6 START 
+
+threeFL_RED_split <- threeFL_split_df[-c(20, 22, 26),]
+
+threeFL_RED_split_items <- threeFL_RED_split$Item_No
+# ========================================================================== RED 6 END 
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
  
