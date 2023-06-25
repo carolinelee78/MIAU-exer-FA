@@ -752,104 +752,482 @@ knitr::kable(fourFL_row14) # NOT SURE
 ```{r}
 fourFL_row15 <- as.data.frame(fourFL_loadings[15,])
 
-knitr::kable(fourFL_row15) # good in 3 samples, GREEN
+knitr::kable(fourFL_row15) # good in 3 samples & cross-loading <.3, GREEN
 ```
 
 ```{r}
-fourFL_row <- as.data.frame(fourFL_loadings[,])
+fourFL_row16 <- as.data.frame(fourFL_loadings[16,])
 
-knitr::kable(fourFL_row) # 
+knitr::kable(fourFL_row16) # good in 3 samples & cross-loading <.3, GREEN
 ```
 
 ```{r}
-fourFL_row <- as.data.frame(fourFL_loadings[,])
+fourFL_row17 <- as.data.frame(fourFL_loadings[17,])
 
-knitr::kable(fourFL_row) # 
+knitr::kable(fourFL_row17) # good in 3 samples & cross-loading <.3, GREEN
 ```
 
 ```{r}
-fourFL_row <- as.data.frame(fourFL_loadings[,])
+fourFL_row18 <- as.data.frame(fourFL_loadings[18,])
 
-knitr::kable(fourFL_row) # 
+knitr::kable(fourFL_row18) # cross-loading >.3, RED
 ```
 
 ```{r}
-fourFL_row <- as.data.frame(fourFL_loadings[,])
+fourFL_row19 <- as.data.frame(fourFL_loadings[19,])
 
-knitr::kable(fourFL_row) # 
+knitr::kable(fourFL_row19) # no cross-loading >.30 but only loaded >.4 in one sample, RED
 ```
 
 ```{r}
-fourFL_row <- as.data.frame(fourFL_loadings[,])
+fourFL_row20 <- as.data.frame(fourFL_loadings[20,])
 
-knitr::kable(fourFL_row) # 
+knitr::kable(fourFL_row20) # cross-loading >.3, RED
 ```
 
 ```{r}
-fourFL_row <- as.data.frame(fourFL_loadings[,])
+fourFL_row21 <- as.data.frame(fourFL_loadings[21,])
 
-knitr::kable(fourFL_row) # 
+knitr::kable(fourFL_row21) # good in 3 samples, GREEN
 ```
 
 ```{r}
-fourFL_row <- as.data.frame(fourFL_loadings[,])
+fourFL_row22 <- as.data.frame(fourFL_loadings[22,])
 
-knitr::kable(fourFL_row) # 
+knitr::kable(fourFL_row22) # cross-loading >.3, RED
 ```
 
 ```{r}
-fourFL_row <- as.data.frame(fourFL_loadings[,])
+fourFL_row23 <- as.data.frame(fourFL_loadings[23,])
 
-knitr::kable(fourFL_row) # 
+knitr::kable(fourFL_row23) # good in 3 samples, GREEN
 ```
 
 ```{r}
-fourFL_row <- as.data.frame(fourFL_loadings[,])
+fourFL_row24 <- as.data.frame(fourFL_loadings[24,])
 
-knitr::kable(fourFL_row) # 
+knitr::kable(fourFL_row24) # cross-loading >.3, RED
 ```
 
 ```{r}
-fourFL_row <- as.data.frame(fourFL_loadings[,])
+fourFL_row25 <- as.data.frame(fourFL_loadings[25,])
 
-knitr::kable(fourFL_row) # 
+knitr::kable(fourFL_row25) # good in 3 samples & cross-loading <.3, GREEN
 ```
 
 ```{r}
-fourFL_row <- as.data.frame(fourFL_loadings[,])
+fourFL_row26 <- as.data.frame(fourFL_loadings[26,])
 
-knitr::kable(fourFL_row) # 
+knitr::kable(fourFL_row26) # good in 3 samples & cross-loading <.3, GREEN
 ```
 
 ```{r}
-fourFL_row <- as.data.frame(fourFL_loadings[,])
+fourFL_row27 <- as.data.frame(fourFL_loadings[27,])
 
-knitr::kable(fourFL_row) # 
+knitr::kable(fourFL_row27) # good in 2 samples, YELLOW
 ```
 
 ```{r}
-fourFL_row <- as.data.frame(fourFL_loadings[,])
+fourFL_row28 <- as.data.frame(fourFL_loadings[28,])
 
-knitr::kable(fourFL_row) # 
+knitr::kable(fourFL_row28) # cross-loading >.3, RED
 ```
 
 ```{r}
-fourFL_row <- as.data.frame(fourFL_loadings[,])
+fourFL_row29 <- as.data.frame(fourFL_loadings[29,])
 
-knitr::kable(fourFL_row) # 
+knitr::kable(fourFL_row29) # cross-loading >.3, RED
 ```
 
 ```{r}
-fourFL_row <- as.data.frame(fourFL_loadings[,])
+fourFL_row30 <- as.data.frame(fourFL_loadings[30,])
 
-knitr::kable(fourFL_row) # 
+knitr::kable(fourFL_row30) # cross-loading >.3, RED
 ```
 
+```{r}
+fourFL_row31 <- as.data.frame(fourFL_loadings[31,])
 
+knitr::kable(fourFL_row31) # good in 3 samples, GREEN
+```
 
+```{r}
+fourFL_row32 <- as.data.frame(fourFL_loadings[32,])
 
+knitr::kable(fourFL_row32) # cross-loading >.3, RED
+```
 
+```{r}
+fourFL_row33 <- as.data.frame(fourFL_loadings[33,])
 
+knitr::kable(fourFL_row33) # cross-loading >.3, RED
+```
+
+```{r}
+fourFL_row34 <- as.data.frame(fourFL_loadings[34,])
+
+knitr::kable(fourFL_row34) # good in 3 samples & cross-loading <.3, GREEN 
+```
+
+```{r}
+fourFL_row35 <- as.data.frame(fourFL_loadings[35,])
+
+knitr::kable(fourFL_row35) # good in 3 samples, GREEN
+```
+
+```{r}
+fourFL_row36 <- as.data.frame(fourFL_loadings[36,])
+
+knitr::kable(fourFL_row36) # good in 3 samples, GREEN
+```
+
+```{r}
+fourFL_row37 <- as.data.frame(fourFL_loadings[37,])
+
+knitr::kable(fourFL_row37) # cross-loading >.3, RED
+```
+
+```{r}
+fourFL_row38 <- as.data.frame(fourFL_loadings[38,])
+
+knitr::kable(fourFL_row38) # cross-loading >.3, RED
+```
+
+```{r}
+fourFL_row39 <- as.data.frame(fourFL_loadings[39,])
+
+knitr::kable(fourFL_row39) # cross-loading >.3, RED
+```
+
+```{r}
+fourFL_row40 <- as.data.frame(fourFL_loadings[40,])
+
+knitr::kable(fourFL_row40) # good in 3 samples & cross-loading <.3, GREEN
+```
+
+```{r}
+fourFL_row41 <- as.data.frame(fourFL_loadings[41,])
+
+knitr::kable(fourFL_row41) # cross-loading >.3, RED
+```
+
+```{r}
+fourFL_row42 <- as.data.frame(fourFL_loadings[42,])
+
+knitr::kable(fourFL_row42) # cross-loading >.3, RED
+```
+
+```{r}
+fourFL_row43 <- as.data.frame(fourFL_loadings[43,])
+
+knitr::kable(fourFL_row43) # cross-loading >.3, RED
+```
+
+```{r}
+fourFL_row44 <- as.data.frame(fourFL_loadings[44,])
+
+knitr::kable(fourFL_row44) # good in 3 samples & cross-loading <.3, GREEN
+```
+
+```{r}
+fourFL_row45 <- as.data.frame(fourFL_loadings[45,])
+
+knitr::kable(fourFL_row45) # good in 3 samples, GREEN
+```
+
+```{r}
+fourFL_row46 <- as.data.frame(fourFL_loadings[46,])
+
+knitr::kable(fourFL_row46) # good in 2 samples, cross-loading <.3, YELLOW
+```
+
+```{r}
+fourFL_row47 <- as.data.frame(fourFL_loadings[47,])
+
+knitr::kable(fourFL_row47) # cross-loading >.3, RED
+```
+
+```{r}
+fourFL_row48 <- as.data.frame(fourFL_loadings[48,])
+
+knitr::kable(fourFL_row48) # cross-loading >.3, RED
+```
+
+```{r}
+fourFL_row49 <- as.data.frame(fourFL_loadings[49,])
+
+knitr::kable(fourFL_row49) # no cross-loading >.30 but only loaded >.4 in one sample, RED
+```
+
+```{r}
+fourFL_row50 <- as.data.frame(fourFL_loadings[50,])
+
+knitr::kable(fourFL_row50) # cross-loading >.3, RED
+```
+
+```{r}
+fourFL_row51 <- as.data.frame(fourFL_loadings[51,])
+
+knitr::kable(fourFL_row51) # cross-loading >.3, RED
+```
+
+```{r}
+fourFL_row52 <- as.data.frame(fourFL_loadings[52,])
+
+knitr::kable(fourFL_row52) # no cross-loading >.30 but only loaded >.4 in one sample, RED
+```
+
+```{r}
+fourFL_row53 <- as.data.frame(fourFL_loadings[53,])
+
+knitr::kable(fourFL_row53) # cross-loading >.3, RED
+```
+
+```{r}
+fourFL_row54 <- as.data.frame(fourFL_loadings[54,])
+
+knitr::kable(fourFL_row54) # good in 3 samples & cross-loading <.3, GREEN
+```
+
+```{r}
+fourFL_row55 <- as.data.frame(fourFL_loadings[55,])
+
+knitr::kable(fourFL_row55) # good in 3 samples, GREEN
+```
+
+```{r}
+fourFL_row56 <- as.data.frame(fourFL_loadings[56,])
+
+knitr::kable(fourFL_row56) # cross-loading >.3, RED
+```
+
+```{r}
+fourFL_row57 <- as.data.frame(fourFL_loadings[57,])
+
+knitr::kable(fourFL_row57) # good in 3 samples & cross-loading <.3, GREEN
+```
+
+```{r}
+fourFL_row58 <- as.data.frame(fourFL_loadings[58,])
+
+knitr::kable(fourFL_row58) # cross-loading >.3, RED
+```
+
+```{r}
+fourFL_row59 <- as.data.frame(fourFL_loadings[59,])
+
+knitr::kable(fourFL_row59) # cross-loading >.3, RED
+```
+
+```{r}
+fourFL_row60 <- as.data.frame(fourFL_loadings[60,])
+
+knitr::kable(fourFL_row60) # cross-loading >.3, RED
+```
+
+```{r}
+fourFL_row61 <- as.data.frame(fourFL_loadings[61,])
+
+knitr::kable(fourFL_row61) # cross-loading >.3, RED
+```
+
+```{r}
+fourFL_row62 <- as.data.frame(fourFL_loadings[62,])
+
+knitr::kable(fourFL_row62) # good in 3 samples & cross-loading <.3, GREEN
+```
+
+```{r}
+fourFL_row63 <- as.data.frame(fourFL_loadings[63,])
+
+knitr::kable(fourFL_row63) # cross-loading >.3, RED
+```
+
+```{r}
+fourFL_row64 <- as.data.frame(fourFL_loadings[64,])
+
+knitr::kable(fourFL_row64) # good in 3 samples & cross-loading <.3, GREEN
+```
+
+```{r}
+fourFL_row65 <- as.data.frame(fourFL_loadings[65,])
+
+knitr::kable(fourFL_row65) # cross-loading >.3, RED
+```
+
+```{r}
+fourFL_row66 <- as.data.frame(fourFL_loadings[66,])
+
+knitr::kable(fourFL_row66) # cross-loading >.3, RED
+```
+
+```{r}
+fourFL_row67 <- as.data.frame(fourFL_loadings[67,])
+
+knitr::kable(fourFL_row67) # good in 3 samples, GREEN
+```
+
+```{r}
+fourFL_row68 <- as.data.frame(fourFL_loadings[68,])
+
+knitr::kable(fourFL_row68) # cross-loading >.3, RED
+```
+
+```{r}
+fourFL_row69 <- as.data.frame(fourFL_loadings[69,])
+
+knitr::kable(fourFL_row69) # good in 3 samples & cross-loading <.3, GREEN
+```
+
+```{r}
+fourFL_row70 <- as.data.frame(fourFL_loadings[70,])
+
+knitr::kable(fourFL_row70) # cross-loading >.3, RED
+```
+
+```{r}
+fourFL_row71 <- as.data.frame(fourFL_loadings[71,])
+
+knitr::kable(fourFL_row71) # cross-loading >.3, RED
+```
+
+```{r}
+fourFL_row72 <- as.data.frame(fourFL_loadings[72,])
+
+knitr::kable(fourFL_row72) # cross-loading >.3, RED
+```
+
+```{r}
+fourFL_row73 <- as.data.frame(fourFL_loadings[73,])
+
+knitr::kable(fourFL_row73) # good in 3 samples & cross-loading <.3, GREEN
+```
+
+```{r}
+fourFL_row74 <- as.data.frame(fourFL_loadings[74,])
+
+knitr::kable(fourFL_row74) # cross-loading >.3, RED
+```
+
+```{r}
+fourFL_row75 <- as.data.frame(fourFL_loadings[75,])
+
+knitr::kable(fourFL_row75) # no loadings >.4, RED
+```
+
+```{r}
+fourFL_row76 <- as.data.frame(fourFL_loadings[76,])
+
+knitr::kable(fourFL_row76) # good in 3 samples & cross-loading <.3, GREEN
+```
+
+```{r}
+fourFL_row77 <- as.data.frame(fourFL_loadings[77,])
+
+knitr::kable(fourFL_row77) # good in 3 samples & cross-loading <.3, GREEN
+```
+
+```{r}
+fourFL_row78 <- as.data.frame(fourFL_loadings[78,])
+
+knitr::kable(fourFL_row78) # cross-loading >.3, RED
+```
+
+```{r}
+fourFL_row79<- as.data.frame(fourFL_loadings[79,])
+
+knitr::kable(fourFL_row79) # good in 3 samples & cross-loading <.3, GREEN
+```
+
+```{r}
+fourFL_row80 <- as.data.frame(fourFL_loadings[80,])
+
+knitr::kable(fourFL_row80) # good in 2 samples, YELLOW
+```
+
+```{r}
+fourFL_row81 <- as.data.frame(fourFL_loadings[81,])
+
+knitr::kable(fourFL_row81) # cross-loading >.3, RED
+```
+
+```{r}
+fourFL_row82 <- as.data.frame(fourFL_loadings[82,])
+
+knitr::kable(fourFL_row82) # good in 3 samples, GREEN
+```
+
+```{r}
+fourFL_row83 <- as.data.frame(fourFL_loadings[83,])
+
+knitr::kable(fourFL_row83) # cross-loading >.3, RED
+```
+
+```{r}
+fourFL_row84 <- as.data.frame(fourFL_loadings[84,])
+
+knitr::kable(fourFL_row84) # cross-loading >.3, RED
+```
+
+```{r}
+fourFL_row85 <- as.data.frame(fourFL_loadings[85,])
+
+knitr::kable(fourFL_row85) # good in 3 samples & cross-loading <.3, GREEN
+```
+
+```{r}
+fourFL_row86 <- as.data.frame(fourFL_loadings[86,])
+
+knitr::kable(fourFL_row86) # good in 3 samples & cross-loading <.3, GREEN
+```
+
+```{r}
+fourFL_row87 <- as.data.frame(fourFL_loadings[87,])
+
+knitr::kable(fourFL_row87) # cross-loading >.3, RED
+```
+
+```{r}
+fourFL_row88 <- as.data.frame(fourFL_loadings[88,])
+
+knitr::kable(fourFL_row88) # cross-loading >.3, RED
+```
+
+```{r}
+fourFL_row89 <- as.data.frame(fourFL_loadings[89,])
+
+knitr::kable(fourFL_row89) # cross-loading >.3, RED
+```
+
+```{r}
+fourFL_row90 <- as.data.frame(fourFL_loadings[90,])
+
+knitr::kable(fourFL_row90) # cross-loading >.3, RED
+```
+
+```{r}
+fourFL_row91 <- as.data.frame(fourFL_loadings[91,])
+
+knitr::kable(fourFL_row91) # cross-loading >.3, RED
+```
+
+```{r}
+fourFL_row92 <- as.data.frame(fourFL_loadings[92,])
+
+knitr::kable(fourFL_row92) # cross-loading >.3, RED
+```
+
+```{r}
+fourFL_row93 <- as.data.frame(fourFL_loadings[93,])
+
+knitr::kable(fourFL_row93) # cross-loading >.3, RED
+```
+
+```{r}
+fourFL_row94 <- as.data.frame(fourFL_loadings[94,])
+
+knitr::kable(fourFL_row94) # cross-loading >.3, RED
+```
 
 
 
