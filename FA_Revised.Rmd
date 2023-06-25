@@ -626,15 +626,226 @@ threeFL_RED_split <- threeFL_split_df[-c(20, 22, 26),]
 threeFL_RED_split_items <- threeFL_RED_split$Item_No
 # ========================================================================== RED 6 END 
 
+### FOUR FACTOR LOADINGS 
+
+fourFL_df <- which(FL_count == 4) # subsetting for items that loaded on four factors
+
+fourFL_df <- Final_DF[fourFL_df, ]
+
+tbl4 <- as.data.frame(table(fourFL_df$LoadedFactor))
+
+knitr::kable(tbl4)
 ```
 
+```{r}
+fourFL_df_NoNum <- fourFL_df[,-c(1, 49)] # removing non-numerical columns
 
+fourFL_df$firstloading <- apply(fourFL_df_NoNum, 1, function(z) na.omit(z)[1]) # extract first loading 
 
+fourFL_df$firstloading <- as.numeric(fourFL_df$firstloading)
 
+fourFL_df$secondloading <- apply(fourFL_df_NoNum, 1, function(z) na.omit(z)[2]) # extract second loading 
 
+fourFL_df$secondloading <- as.numeric(fourFL_df$secondloading)
 
+fourFL_df$thirdloading <- apply(fourFL_df_NoNum, 1, function(z) na.omit(z)[3]) # extract third loading 
 
+fourFL_df$thirdloading <- as.numeric(fourFL_df$thirdloading)
 
+fourFL_df$fourthloading <- apply(fourFL_df_NoNum, 1, function(z) na.omit(z)[4]) # extract fourth loading
+
+fourFL_df$fourthloading <- as.numeric(fourFL_df$fourthloading)
+
+fourFL_df$firstFL_inrange <- ifelse(abs(fourFL_df$firstloading) >= .40, TRUE, FALSE)
+
+fourFL_df$secondFL_inrange <- ifelse(abs(fourFL_df$secondloading) >= .40, TRUE, FALSE)
+
+fourFL_df$thirdFL_inrange <- ifelse(abs(fourFL_df$thirdloading) >= .40, TRUE, FALSE)
+
+fourFL_df$fourthFL_inrange <- ifelse(abs(fourFL_df$fourthloading) >= .40, TRUE, FALSE)
+
+fourFL_loadings <- fourFL_df[,49:57]
+```
+
+```{r}
+fourFL_row1 <- as.data.frame(fourFL_loadings[1,])
+
+knitr::kable(fourFL_row1) # cross-loading >.30, RED
+```
+
+```{r}
+fourFL_row2 <- as.data.frame(fourFL_loadings[2,])
+
+knitr::kable(fourFL_row2) # no cross-loading >.30 but only loaded >.4 in one sample, RED
+```
+
+```{r}
+fourFL_row3 <- as.data.frame(fourFL_loadings[3,])
+
+knitr::kable(fourFL_row3) # cross-loading >.30, RED
+```
+
+```{r}
+fourFL_row4 <- as.data.frame(fourFL_loadings[4,])
+
+knitr::kable(fourFL_row4) # good in 3 samples, GREEN
+```
+
+```{r}
+fourFL_row5 <- as.data.frame(fourFL_loadings[5,])
+
+knitr::kable(fourFL_row5) # cross-loading >.30, RED
+```
+
+```{r}
+fourFL_row6 <- as.data.frame(fourFL_loadings[6,])
+
+knitr::kable(fourFL_row6) # cross-loading >.30, RED
+```
+
+```{r}
+fourFL_row7 <- as.data.frame(fourFL_loadings[7,])
+
+knitr::kable(fourFL_row7) # good in 3 samples, cross-loading <.3, GREEN
+```
+
+```{r}
+fourFL_row8 <- as.data.frame(fourFL_loadings[8,])
+
+knitr::kable(fourFL_row8) # good in 3 samples, GREEN
+```
+
+```{r}
+fourFL_row9 <- as.data.frame(fourFL_loadings[9,])
+
+knitr::kable(fourFL_row9) # 
+```
+
+```{r}
+fourFL_row10 <- as.data.frame(fourFL_loadings[10,])
+
+knitr::kable(fourFL_row10) # 
+```
+
+```{r}
+fourFL_row11 <- as.data.frame(fourFL_loadings[11,])
+
+knitr::kable(fourFL_row11) # 
+```
+
+```{r}
+fourFL_row12 <- as.data.frame(fourFL_loadings[12,])
+
+knitr::kable(fourFL_row12) # 
+```
+
+```{r}
+fourFL_row13 <- as.data.frame(fourFL_loadings[13,])
+
+knitr::kable(fourFL_row13) # 
+```
+
+```{r}
+fourFL_row14 <- as.data.frame(fourFL_loadings[14,])
+
+knitr::kable(fourFL_row14) # 
+```
+
+```{r}
+fourFL_row15 <- as.data.frame(fourFL_loadings[15,])
+
+knitr::kable(fourFL_row15) # 
+```
+
+```{r}
+fourFL_row <- as.data.frame(fourFL_loadings[,])
+
+knitr::kable(fourFL_row) # 
+```
+
+```{r}
+fourFL_row <- as.data.frame(fourFL_loadings[,])
+
+knitr::kable(fourFL_row) # 
+```
+
+```{r}
+fourFL_row <- as.data.frame(fourFL_loadings[,])
+
+knitr::kable(fourFL_row) # 
+```
+
+```{r}
+fourFL_row <- as.data.frame(fourFL_loadings[,])
+
+knitr::kable(fourFL_row) # 
+```
+
+```{r}
+fourFL_row <- as.data.frame(fourFL_loadings[,])
+
+knitr::kable(fourFL_row) # 
+```
+
+```{r}
+fourFL_row <- as.data.frame(fourFL_loadings[,])
+
+knitr::kable(fourFL_row) # 
+```
+
+```{r}
+fourFL_row <- as.data.frame(fourFL_loadings[,])
+
+knitr::kable(fourFL_row) # 
+```
+
+```{r}
+fourFL_row <- as.data.frame(fourFL_loadings[,])
+
+knitr::kable(fourFL_row) # 
+```
+
+```{r}
+fourFL_row <- as.data.frame(fourFL_loadings[,])
+
+knitr::kable(fourFL_row) # 
+```
+
+```{r}
+fourFL_row <- as.data.frame(fourFL_loadings[,])
+
+knitr::kable(fourFL_row) # 
+```
+
+```{r}
+fourFL_row <- as.data.frame(fourFL_loadings[,])
+
+knitr::kable(fourFL_row) # 
+```
+
+```{r}
+fourFL_row <- as.data.frame(fourFL_loadings[,])
+
+knitr::kable(fourFL_row) # 
+```
+
+```{r}
+fourFL_row <- as.data.frame(fourFL_loadings[,])
+
+knitr::kable(fourFL_row) # 
+```
+
+```{r}
+fourFL_row <- as.data.frame(fourFL_loadings[,])
+
+knitr::kable(fourFL_row) # 
+```
+
+```{r}
+fourFL_row <- as.data.frame(fourFL_loadings[,])
+
+knitr::kable(fourFL_row) # 
+```
 
 
 
