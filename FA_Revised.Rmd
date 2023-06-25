@@ -100,11 +100,9 @@ pre {
 ```{r, warning=FALSE, message=FALSE}
 # setwd("/Users/kdlee/Desktop/MIAU-exer-FA/data")
 
-# setwd("/Users/carolinelee/Desktop/MIAU-exer-FA/data")
+setwd("/Users/carolinelee/Desktop/MIAU-exer-FA/data")
 
 # setwd("/Users/48909138/OneDrive - Southern Methodist University/Desktop/MIAU-exer-FA/data")
-
-setwd("/Users/kdlee/Desktop/MIAU-exer-FA/data") 
 
 Community_Overall <- read_csv("Com_Overall_FA.csv")
 
@@ -718,43 +716,43 @@ knitr::kable(fourFL_row8) # good in 3 samples, GREEN
 ```{r}
 fourFL_row9 <- as.data.frame(fourFL_loadings[9,])
 
-knitr::kable(fourFL_row9) # 
+knitr::kable(fourFL_row9) # cross-loading >.30, RED
 ```
 
 ```{r}
 fourFL_row10 <- as.data.frame(fourFL_loadings[10,])
 
-knitr::kable(fourFL_row10) # 
+knitr::kable(fourFL_row10) # cross-loading >.30, RED
 ```
 
 ```{r}
 fourFL_row11 <- as.data.frame(fourFL_loadings[11,])
 
-knitr::kable(fourFL_row11) # 
+knitr::kable(fourFL_row11) # cross-loading >.30, RED
 ```
 
 ```{r}
 fourFL_row12 <- as.data.frame(fourFL_loadings[12,])
 
-knitr::kable(fourFL_row12) # 
+knitr::kable(fourFL_row12) # cross-loading >.30, RED
 ```
 
 ```{r}
 fourFL_row13 <- as.data.frame(fourFL_loadings[13,])
 
-knitr::kable(fourFL_row13) # 
+knitr::kable(fourFL_row13) # NOT SURE
 ```
 
 ```{r}
 fourFL_row14 <- as.data.frame(fourFL_loadings[14,])
 
-knitr::kable(fourFL_row14) # 
+knitr::kable(fourFL_row14) # NOT SURE
 ```
 
 ```{r}
 fourFL_row15 <- as.data.frame(fourFL_loadings[15,])
 
-knitr::kable(fourFL_row15) # 
+knitr::kable(fourFL_row15) # good in 3 samples, GREEN
 ```
 
 ```{r}
