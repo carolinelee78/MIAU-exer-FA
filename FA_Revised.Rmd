@@ -740,13 +740,13 @@ knitr::kable(fourFL_row12) # cross-loading >.30, RED
 ```{r}
 fourFL_row13 <- as.data.frame(fourFL_loadings[13,])
 
-knitr::kable(fourFL_row13) # NOT SURE
+knitr::kable(fourFL_row13) # cross-loading >.3, RED
 ```
 
 ```{r}
 fourFL_row14 <- as.data.frame(fourFL_loadings[14,])
 
-knitr::kable(fourFL_row14) # NOT SURE
+knitr::kable(fourFL_row14) # good in 3 samples, GREEN
 ```
 
 ```{r}
@@ -1229,14 +1229,537 @@ fourFL_row94 <- as.data.frame(fourFL_loadings[94,])
 knitr::kable(fourFL_row94) # cross-loading >.3, RED
 ```
 
+```{r}
+# ========================================================================== GREEN 2 START 
+
+fourFL_GREEN <- fourFL_df[c(4, 7, 8, 14, 15, 16, 17, 21, 23, 25, 26, 31, 34, 35, 36, 40, 44, 45, 54, 55, 57, 62, 64, 67, 69, 73, 76, 77, 79, 82, 85, 86),]
+
+fourFL_GREEN_items <- fourFL_GREEN$Item_No
+
+# ========================================================================== GREEN 2 END
+
+# ========================================================================== YELLOW 4 START 
+
+fourFL_YELLOW <- fourFL_df[c(27, 46, 80),]
+
+fourFL_YELLOW_items <- fourFL_YELLOW$Item_No
+
+# =========================================================================== YELLOW 4 END  
+
+# ========================================================================== RED 7 START 
+
+fourFL_RED <- fourFL_df[c(1, 2, 3, 5, 6, 9, 10, 11, 12, 13, 18, 19, 20, 22, 24, 28, 29, 30, 
+32, 33, 37, 38, 39, 41, 42, 43, 47, 48, 49, 50, 51, 52, 53, 56, 58, 59, 60, 61, 63, 65, 66, 68, 70, 71, 72, 74, 75, 78, 81, 83, 84, 87, 88, 89, 90, 91, 92, 93, 94),]
+
+fourFL_RED_items <- fourFL_RED$Item_No
+# ========================================================================== RED 7 END 
+
+### FIVE FACTOR LOADINGS 
+
+fiveFL_df <- which(FL_count == 5) # subsetting for items that loaded on five factors
+
+fiveFL_df <- Final_DF[fiveFL_df, ]
+
+tbl5 <- as.data.frame(table(fiveFL_df$LoadedFactor))
+
+knitr::kable(tbl5)
+```
+
+```{r}
+fiveFL_df_NoNum <- fiveFL_df[,-c(1, 49)] # removing non-numerical columns
+
+fiveFL_df$firstloading <- apply(fiveFL_df_NoNum, 1, function(z) na.omit(z)[1]) # extract first loading 
+
+fiveFL_df$firstloading <- as.numeric(fiveFL_df$firstloading)
+
+fiveFL_df$secondloading <- apply(fiveFL_df_NoNum, 1, function(z) na.omit(z)[2]) # extract second loading 
+
+fiveFL_df$secondloading <- as.numeric(fiveFL_df$secondloading)
+
+fiveFL_df$thirdloading <- apply(fiveFL_df_NoNum, 1, function(z) na.omit(z)[3]) # extract third loading 
+
+fiveFL_df$thirdloading <- as.numeric(fiveFL_df$thirdloading)
+
+fiveFL_df$fourthloading <- apply(fiveFL_df_NoNum, 1, function(z) na.omit(z)[4]) # extract fiveth loading
+
+fiveFL_df$fourthloading <- as.numeric(fiveFL_df$fourthloading)
+
+fiveFL_df$fifthloading <- apply(fiveFL_df_NoNum, 1, function(z) na.omit(z)[5]) # extract fiveth loading
+
+fiveFL_df$fifthloading <- as.numeric(fiveFL_df$fifthloading)
+
+fiveFL_df$firstFL_inrange <- ifelse(abs(fiveFL_df$firstloading) >= .40, TRUE, FALSE)
+
+fiveFL_df$secondFL_inrange <- ifelse(abs(fiveFL_df$secondloading) >= .40, TRUE, FALSE)
+
+fiveFL_df$thirdFL_inrange <- ifelse(abs(fiveFL_df$thirdloading) >= .40, TRUE, FALSE)
+
+fiveFL_df$fourthFL_inrange <- ifelse(abs(fiveFL_df$fourthloading) >= .40, TRUE, FALSE)
+
+fiveFL_df$fifthFL_inrange <- ifelse(abs(fiveFL_df$fifthloading) >= .40, TRUE, FALSE)
+
+fiveFL_loadings <- fiveFL_df[,49:59]
+```
+
+```{r}
+fiveFL_row1 <- as.data.frame(fiveFL_loadings[1,])
+
+knitr::kable(fiveFL_row1) # cross-loading >.3, RED
+```
+
+```{r}
+fiveFL_row2 <- as.data.frame(fiveFL_loadings[2,])
+
+knitr::kable(fiveFL_row2) # cross-loading >.3, RED
+```
+
+```{r}
+fiveFL_row3 <- as.data.frame(fiveFL_loadings[3,])
+
+knitr::kable(fiveFL_row3) # cross-loading >.3, RED
+```
+
+```{r}
+fiveFL_row4 <- as.data.frame(fiveFL_loadings[4,])
+
+knitr::kable(fiveFL_row4) # cross-loading >.3, RED 
+```
+
+```{r}
+fiveFL_row5 <- as.data.frame(fiveFL_loadings[5,])
+
+knitr::kable(fiveFL_row5) # cross-loading >.3, RED
+```
+
+```{r}
+fiveFL_row6 <- as.data.frame(fiveFL_loadings[6,])
+
+knitr::kable(fiveFL_row6) # cross-loading >.3, RED
+```
+
+```{r}
+fiveFL_row7 <- as.data.frame(fiveFL_loadings[7,])
+
+knitr::kable(fiveFL_row7) # cross-loading >.3, RED
+```
+
+```{r}
+fiveFL_row8 <- as.data.frame(fiveFL_loadings[8,])
+
+knitr::kable(fiveFL_row8) # cross-loading >.3, RED
+```
+
+```{r}
+fiveFL_row9 <- as.data.frame(fiveFL_loadings[9,])
+
+knitr::kable(fiveFL_row9) # no cross-loading >.30 but only loaded >.4 in one sample, RED
+```
+
+```{r}
+fiveFL_row10 <- as.data.frame(fiveFL_loadings[10,])
+
+knitr::kable(fiveFL_row10) # cross-loading >.3, RED
+```
+
+```{r}
+fiveFL_row11 <- as.data.frame(fiveFL_loadings[11,])
+
+knitr::kable(fiveFL_row11) # good in 3 samples & cross-loading <.3, GREEN
+```
+
+```{r}
+fiveFL_row12 <- as.data.frame(fiveFL_loadings[12,])
+
+knitr::kable(fiveFL_row12) # cross-loading >.3, RED
+```
+
+```{r}
+fiveFL_row13 <- as.data.frame(fiveFL_loadings[13,])
+
+knitr::kable(fiveFL_row13) # cross-loading >.3, RED
+```
+
+```{r}
+fiveFL_row14 <- as.data.frame(fiveFL_loadings[14,])
+
+knitr::kable(fiveFL_row14) # cross-loading >.3, RED
+```
+
+```{r}
+fiveFL_row15 <- as.data.frame(fiveFL_loadings[15,])
+
+knitr::kable(fiveFL_row15) # cross-loading >.3, RED
+```
+
+```{r}
+fiveFL_row16 <- as.data.frame(fiveFL_loadings[16,])
+
+knitr::kable(fiveFL_row16) # cross-loading >.3, RED
+```
+
+```{r}
+fiveFL_row17 <- as.data.frame(fiveFL_loadings[17,])
+
+knitr::kable(fiveFL_row17) # cross-loading >.3, RED
+```
+
+```{r}
+fiveFL_row18 <- as.data.frame(fiveFL_loadings[18,])
+
+knitr::kable(fiveFL_row18) # cross-loading >.3, RED
+```
+
+```{r}
+fiveFL_row19 <- as.data.frame(fiveFL_loadings[19,])
+
+knitr::kable(fiveFL_row19) # cross-loading >.3, RED
+```
+
+```{r}
+fiveFL_row20 <- as.data.frame(fiveFL_loadings[20,])
+
+knitr::kable(fiveFL_row20) # cross-loading >.3, RED
+```
+
+```{r}
+fiveFL_row21 <- as.data.frame(fiveFL_loadings[21,])
+
+knitr::kable(fiveFL_row21) # cross-loading >.3, RED
+```
+
+```{r}
+fiveFL_row22 <- as.data.frame(fiveFL_loadings[22,])
+
+knitr::kable(fiveFL_row22) # cross-loading >.3, RED
+```
+
+```{r}
+fiveFL_row23 <- as.data.frame(fiveFL_loadings[23,])
+
+knitr::kable(fiveFL_row23) # cross-loading >.3, RED
+```
+
+```{r}
+fiveFL_row24 <- as.data.frame(fiveFL_loadings[24,])
+
+knitr::kable(fiveFL_row24) # cross-loading >.3, RED
+```
+
+```{r}
+fiveFL_row25 <- as.data.frame(fiveFL_loadings[25,])
+
+knitr::kable(fiveFL_row25) # no cross-loading >.30 but only loaded >.4 in one sample, RED
+```
+
+```{r}
+fiveFL_row26 <- as.data.frame(fiveFL_loadings[26,])
+
+knitr::kable(fiveFL_row26) # no cross-loading >.30 but only loaded >.4 in one sample, RED
+```
+
+```{r}
+fiveFL_row27 <- as.data.frame(fiveFL_loadings[27,])
+
+knitr::kable(fiveFL_row27) # good in 3 samples & cross-loading <.3, GREEN
+```
+
+```{r}
+fiveFL_row28 <- as.data.frame(fiveFL_loadings[28,])
+
+knitr::kable(fiveFL_row28) # cross-loading >.3, RED
+```
+
+```{r}
+fiveFL_row29 <- as.data.frame(fiveFL_loadings[29,])
+
+knitr::kable(fiveFL_row29) # good in 2 samples, no cross-loadings >.3, YELLOW
+```
+
+```{r}
+fiveFL_row30 <- as.data.frame(fiveFL_loadings[30,])
+
+knitr::kable(fiveFL_row30) # cross-loading >.3, RED
+```
+
+```{r}
+fiveFL_row31 <- as.data.frame(fiveFL_loadings[31,])
+
+knitr::kable(fiveFL_row31) # cross-loading >.3, RED
+```
+
+```{r}
+fiveFL_row32 <- as.data.frame(fiveFL_loadings[32,])
+
+knitr::kable(fiveFL_row32) # cross-loading >.3, RED
+```
+
+```{r}
+fiveFL_row33 <- as.data.frame(fiveFL_loadings[33,])
+
+knitr::kable(fiveFL_row33) # cross-loading >.3, RED
+```
+
+```{r}
+fiveFL_row34 <- as.data.frame(fiveFL_loadings[34,])
+
+knitr::kable(fiveFL_row34) # no cross-loading >.30 but did not load >.4 in any sample, RED
+```
+
+```{r}
+fiveFL_row35 <- as.data.frame(fiveFL_loadings[35,])
+
+knitr::kable(fiveFL_row35) # cross-loading >.3, RED
+```
+
+```{r}
+fiveFL_row36 <- as.data.frame(fiveFL_loadings[36,])
+
+knitr::kable(fiveFL_row36) # cross-loading >.3, RED
+```
+
+```{r}
+fiveFL_row37 <- as.data.frame(fiveFL_loadings[37,])
+
+knitr::kable(fiveFL_row37) # cross-loading >.3, RED
+```
+
+```{r}
+fiveFL_row38 <- as.data.frame(fiveFL_loadings[38,])
+
+knitr::kable(fiveFL_row38) # good in 3 samples & cross-loadings <.3, GREEN
+```
+
+```{r}
+fiveFL_row39 <- as.data.frame(fiveFL_loadings[39,])
+
+knitr::kable(fiveFL_row39) # cross-loading >.3, RED
+```
+
+```{r}
+fiveFL_row40 <- as.data.frame(fiveFL_loadings[40,])
+
+knitr::kable(fiveFL_row40) # cross-loading >.3, RED
+```
+
+```{r}
+fiveFL_row41 <- as.data.frame(fiveFL_loadings[41,])
+
+knitr::kable(fiveFL_row41) # cross-loading >.3, RED
+```
+
+```{r}
+fiveFL_row42 <- as.data.frame(fiveFL_loadings[42,])
+
+knitr::kable(fiveFL_row42) # cross-loading >.3, RED
+```
+
+```{r}
+fiveFL_row43 <- as.data.frame(fiveFL_loadings[43,])
+
+knitr::kable(fiveFL_row43) # cross-loading >.3, RED
+```
+
+```{r}
+fiveFL_row44 <- as.data.frame(fiveFL_loadings[44,])
+
+knitr::kable(fiveFL_row44) # cross-loading >.3, RED
+```
+
+```{r}
+fiveFL_row45 <- as.data.frame(fiveFL_loadings[45,])
+
+knitr::kable(fiveFL_row45) # cross-loading >.3, RED
+```
+
+```{r}
+fiveFL_row46 <- as.data.frame(fiveFL_loadings[46,])
+
+knitr::kable(fiveFL_row46) # cross-loading >.3, RED
+```
+
+```{r}
+fiveFL_row47 <- as.data.frame(fiveFL_loadings[47,])
+
+knitr::kable(fiveFL_row47) # cross-loading >.3, RED
+```
+
+```{r}
+fiveFL_row48 <- as.data.frame(fiveFL_loadings[48,])
+
+knitr::kable(fiveFL_row48) # cross-loading >.3, RED
+```
+
+```{r}
+fiveFL_row49 <- as.data.frame(fiveFL_loadings[49,])
+
+knitr::kable(fiveFL_row49) # good in 2 samples, no cross-loading >.3, YELLOW
+```
+
+```{r}
+fiveFL_row50 <- as.data.frame(fiveFL_loadings[50,])
+
+knitr::kable(fiveFL_row50) # cross-loading >.3, RED
+```
+
+```{r}
+fiveFL_row51 <- as.data.frame(fiveFL_loadings[51,])
+
+knitr::kable(fiveFL_row51) # cross-loading >.3, RED
+```
+
+```{r}
+fiveFL_row52 <- as.data.frame(fiveFL_loadings[52,])
+
+knitr::kable(fiveFL_row52) # cross-loading >.3, RED
+```
+
+```{r}
+fiveFL_row53 <- as.data.frame(fiveFL_loadings[53,])
+
+knitr::kable(fiveFL_row53) # cross-loading >.3, RED
+```
+
+```{r}
+fiveFL_row54 <- as.data.frame(fiveFL_loadings[54,])
+
+knitr::kable(fiveFL_row54) # cross-loading >.3, RED
+```
+
+```{r}
+fiveFL_row55 <- as.data.frame(fiveFL_loadings[55,])
+
+knitr::kable(fiveFL_row55) # cross-loading >.3, RED
+```
+
+```{r}
+fiveFL_row56 <- as.data.frame(fiveFL_loadings[56,])
+
+knitr::kable(fiveFL_row56) # cross-loading >.3, RED
+```
+
+```{r}
+fiveFL_row57 <- as.data.frame(fiveFL_loadings[57,])
+
+knitr::kable(fiveFL_row57) # cross-loading >.3, RED
+```
+
+```{r}
+fiveFL_row58 <- as.data.frame(fiveFL_loadings[58,])
+
+knitr::kable(fiveFL_row58) # cross-loading >.3, RED
+```
+
+```{r}
+fiveFL_row59 <- as.data.frame(fiveFL_loadings[59,])
+
+knitr::kable(fiveFL_row59) # good in 3 samples, GREEN
+```
+
+```{r}
+fiveFL_row60 <- as.data.frame(fiveFL_loadings[60,])
+
+knitr::kable(fiveFL_row60) # cross-loading >.3, RED
+```
+
+```{r}
+fiveFL_row61 <- as.data.frame(fiveFL_loadings[61,])
+
+knitr::kable(fiveFL_row61) # cross-loading >.3, RED
+```
+
+```{r}
+fiveFL_row62 <- as.data.frame(fiveFL_loadings[62,])
+
+knitr::kable(fiveFL_row62) # cross-loading >.3, RED 
+```
+
+```{r}
+fiveFL_row63 <- as.data.frame(fiveFL_loadings[63,])
+
+knitr::kable(fiveFL_row63) # cross-loading >.3, RED
+```
+
+```{r}
+fiveFL_row64 <- as.data.frame(fiveFL_loadings[64,])
+
+knitr::kable(fiveFL_row64) # good in 3 samples & cross-loading <.3, GREEN
+```
+
+```{r}
+fiveFL_row65 <- as.data.frame(fiveFL_loadings[65,])
+
+knitr::kable(fiveFL_row65) # cross-loading >.3, RED
+```
+
+```{r}
+# ========================================================================== GREEN 3 START 
+
+fiveFL_GREEN <- fiveFL_df[c(11, 27, 38, 59, 64),]
+
+fiveFL_GREEN_items <- fiveFL_GREEN$Item_No
+
+# ========================================================================== GREEN 3 END
+
+# ========================================================================== YELLOW 5 START 
+
+fiveFL_YELLOW <- fiveFL_df[c(29, 49),]
+
+fiveFL_YELLOW_items <- fiveFL_YELLOW$Item_No
+
+# =========================================================================== YELLOW 5 END  
+
+# ========================================================================== RED 8 START 
+
+fiveFL_RED <- fiveFL_df[-c(11, 27, 29, 38, 49, 59, 64),]
+
+fiveFL_RED_items <- fiveFL_RED$Item_No
+# ========================================================================== RED 8 END 
+
+### SIX FACTOR LOADINGS 
+
+sixFL_df <- which(FL_count == 6) # subsetting for items that loaded on six factors
+
+sixFL_df <- Final_DF[sixFL_df, ]
+
+tbl6 <- as.data.frame(table(sixFL_df$LoadedFactor))
+
+knitr::kable(tbl6)
+```
+
+```{r}
+sixFL_df_NoNum <- sixFL_df[,-c(1, 49)] # removing non-numerical columns
+
+sixFL_df$firstloading <- apply(sixFL_df_NoNum, 1, function(z) na.omit(z)[1]) # extract first loading 
+
+sixFL_df$firstloading <- as.numeric(sixFL_df$firstloading)
+
+sixFL_df$secondloading <- apply(sixFL_df_NoNum, 1, function(z) na.omit(z)[2]) # extract second loading 
+
+sixFL_df$secondloading <- as.numeric(sixFL_df$secondloading)
+
+sixFL_df$thirdloading <- apply(sixFL_df_NoNum, 1, function(z) na.omit(z)[3]) # extract third loading 
+
+sixFL_df$thirdloading <- as.numeric(sixFL_df$thirdloading)
+
+sixFL_df$fourthloading <- apply(sixFL_df_NoNum, 1, function(z) na.omit(z)[4]) # extract sixth loading
+
+sixFL_df$fourthloading <- as.numeric(sixFL_df$fourthloading)
+
+sixFL_df$fifthloading <- apply(sixFL_df_NoNum, 1, function(z) na.omit(z)[5]) # extract fifth loading
+
+sixFL_df$fifthloading <- as.numeric(sixFL_df$fifthloading)
+
+sixFL_df$firstFL_inrange <- ifelse(abs(sixFL_df$firstloading) >= .40, TRUE, FALSE)
+
+sixFL_df$secondFL_inrange <- ifelse(abs(sixFL_df$secondloading) >= .40, TRUE, FALSE)
+
+sixFL_df$thirdFL_inrange <- ifelse(abs(sixFL_df$thirdloading) >= .40, TRUE, FALSE)
+
+sixFL_df$fourthFL_inrange <- ifelse(abs(sixFL_df$fourthloading) >= .40, TRUE, FALSE)
+
+sixFL_df$fifthFL_inrange <- ifelse(abs(sixFL_df$fifthloading) >= .40, TRUE, FALSE)
 
 
 
-
-
-
-
-
-
-
- 
+sixFL_loadings <- sixFL_df[,49:59]
+```
